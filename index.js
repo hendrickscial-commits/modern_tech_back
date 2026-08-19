@@ -1,8 +1,12 @@
 import express from "express";
-import {getLeaveCon, getLeaveByIdCon, acceptLeaveCon, denyLeaveCon, postLeaveCon, getAttendanceCon, getAttendanceByIdCon, getAttendanceByDateCon} from "./controller/leaveCon.js";
+import cors from "cors";
+import {getLeaveCon, getLeaveByIdCon, acceptLeaveCon, denyLeaveCon, postLeaveCon} from "./controller/leaveCon.js";
+import {getAttendanceCon, getAttendanceByIdCon, getAttendanceByDateCon} from "./controller/attendanceCon.js";
 
 
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,13 +27,13 @@ app.post("/leave", postLeaveCon); //Go to body and add a request in thunder clie
 //Get attendance for all employees
 app.get("/attendance", getAttendanceCon);
 
+//Get attendancde of employees by date
+app.get("/attendance/a/:attendance_date", getAttendanceByDateCon);
+
 //Gett attendance by employee id
 app.get("/attendance/:employee_id", getAttendanceByIdCon);
 
-//Get attendancde of employees by date
-app.get("/attendance/a/:attendance_date", getAttendanceByDateCon);
 
 app.listen(2020, () => {
     console.log("http://localhost:2020");
 });
-

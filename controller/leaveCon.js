@@ -1,61 +1,69 @@
-import {getLeave} from '../model/leaveDb.js'
-import {getLeaveById} from '../model/leaveDb.js'
-import {acceptLeave} from '../model/leaveDb.js'
-import {denyLeave} from '../model/leaveDb.js'
-import {postLeave} from '../model/leaveDb.js'
-import {getAttendance} from '../model/leaveDb.js'
-import {getAttendanceById} from '../model/leaveDb.js'
-import {getAttendanceByDate} from '../model/leaveDb.js'
+import { getLeave } from '../model/leaveDb.js'
+import { getLeaveById } from '../model/leaveDb.js'
+import { acceptLeave } from '../model/leaveDb.js'
+import { denyLeave } from '../model/leaveDb.js'
+import { postLeave } from '../model/leaveDb.js'
 
-//Get all leave requests
+// Get all leave requests
 export const getLeaveCon = async (req, res) => {
-  res.json(await getLeave());
+  try {
+    const result = await getLeave();
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error getting leave requests:", error);
+    res.status(500).json({ message: "Failed to get leave requests", error: error.message });
+  }
 }
 
-//Get leave requests by employee ID
+// Get leave requests by employee ID
 export const getLeaveByIdCon = async (req, res) => {
-  const employee_id = req.params.employee_id;
-  res.json(await getLeaveById(employee_id));
+  try {
+    const employee_id = req.params.employee_id;
+    const result = await getLeaveById(employee_id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error getting leave by employee ID:", error);
+    res.status(500).json({ message: "Failed to get leave requests", error: error.message });
+  }
 }
 
-
-//Accept or deny leave requests by leave ID
+// Accept leave request by leave ID
 export const acceptLeaveCon = async (req, res) => {
-  const leave_id = req.params.leave_id;
-  res.json(await acceptLeave(leave_id));
+  try {
+    const leave_id = req.params.leave_id;
+    await acceptLeave(leave_id);
+    res.status(200).json({ message: "Request accepted!" });
+  } catch (error) {
+    console.error("Error accepting leave request:", error);
+    res.status(500).json({ message: "Failed to accept leave request", error: error.message });
+  }
 }
 
+// Deny leave request by leave ID
 export const denyLeaveCon = async (req, res) => {
-  const leave_id = req.params.leave_id;
-  res.json(await denyLeave(leave_id));
+  try {
+    const leave_id = req.params.leave_id;
+    await denyLeave(leave_id);
+    res.status(200).json({ message: "Request denied!" });
+  } catch (error) {
+    console.error("Error denying leave request:", error);
+    res.status(500).json({ message: "Failed to deny leave request", error: error.message });
+  }
 }
 
-//Add a new leave request
+// Add a new leave request
 export const postLeaveCon = async (req, res) => {
-  const { employee_id, leave_date, reason } = req.body;
-  res.json(await postLeave(employee_id, leave_date, reason));
-}
+  try {
+    const { employee_id, leave_date, reason } = req.body;
 
-//Get attendance for all employees
-export const getAttendanceCon = async (req, res) => {
-  res.json(await getAttendance());
-}
+    if (!employee_id || !leave_date || !reason) {
+      return res.status(400).json({ message: "employee_id, leave_date and reason are required" });
+    }
 
-//Get attendance by employee id
-export const getAttendanceByIdCon = async (req, res) => {
-  const employee_id = req.params.employee_id;
-  res.json(await getAttendanceById(employee_id));
-}
-
-//Get attendance of employees by date
-export const getAttendanceByDateCon = async (req, res) => {
-  
-  const attendance_date = req.params.attendance_date;
-  console.log("Date from URL:", attendance_date);
-
-    const result = await getAttendanceByDate(attendance_date);
-
-    console.log("Result from database:", result);
-
-    res.json(result);
+    await postLeave(employee_id, leave_date, reason);
+    res.status(201).json({ message: "New request submitted!" });
+  } catch (error) {
+    console.error("Error posting leave request:", error);
+    res.status(500).json({ message: "Failed to submit leave request", error: error.message });
+  }
 }

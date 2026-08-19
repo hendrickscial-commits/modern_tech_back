@@ -28,22 +28,3 @@ export const postLeave = async (employee_id, leave_date, reason) => {
   let [rows, columns] = await pool.query('INSERT INTO leave_requests (employee_id, leave_date, reason) VALUES (?, ?, ?)', [employee_id, leave_date, reason]);
   return rows
 }
-
-//Get attendance for all employees
-export const getAttendance = async () => {
-  let [rows, columns] = await pool.query('SELECT * FROM attendance');
-  return rows
-} 
-
-//Get attendance by employee id
-export const getAttendanceById = async (employee_id) => {
-  let [rows, columns] = await pool.query('SELECT * FROM attendance WHERE employee_id = ?', [employee_id]);
-  return rows
-}
-
-//Get attendance of employees by date
-export const getAttendanceByDate = async (attendance_date) => {
-  
-  let [rows, columns] = await pool.query('SELECT * FROM attendance WHERE attendance_date = ?', [attendance_date]);
-  return rows
-}
