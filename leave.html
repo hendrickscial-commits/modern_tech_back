@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ModernTech - Time Off & Attendance</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="leave.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-building"></i>
+          </div>
+          <div>
+            <h2>ModernTech</h2>
+            <span>HR Management</span>
+          </div>
+        </div>
+
+        <nav>
+          <a href="./employees.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Employees Data</span>
+          </a>
+          <a href="./payroll.html">
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <span>Payroll</span>
+          </a>
+          <a href="#" class="active">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Time Off/Attendance</span>
+          </a>
+          <a href="performance.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Performance</span>
+          </a>
+          <a href="./index.html" class="logout-link-mobile-nav">
+            <i class="fa-solid fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="avatar">AU</div>
+          <div>
+            <h4>Admin User</h4>
+            <p>HR Administrator</p>
+          </div>
+          <a href="./index.html" class="logout-btn" title="Logout">
+            <i class="fa-solid fa-sign-out-alt"></i>
+          </a>
+        </div>
+      </aside>
+
+      <div class="main-content">
+        <div class="top-bar">
+          <div class="breadcrumb">
+            <span>ModernTech</span>
+            <span>/</span>
+            <span>Time Off</span>
+          </div>
+          <div class="admin-section">
+            <a href="./index.html" class="logout-link-mobile" title="Logout">
+              <i class="fa-solid fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+
+            <div class="admin-date" id="currentDate"></div>
+          </div>
+        </div>
+
+        <header class="main-header">
+          <div class="header-content">
+            <div class="header-text">
+              <h1>Time Off & Attendance Tracking</h1>
+              <p>Monitor hours, leave balances, and requests.</p>
+            </div>
+            <div class="date-selector">
+              <label for="daySelector">Date</label>
+              <input type="date" id="daySelector" />
+            </div>
+            <button class="btn-primary" id="newRequestBtn" type="button">
+              <span>+</span>
+              <span>New Request</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+          <div class="summary-grid" id="summaryCards"></div>
+
+          <div class="dashboard-layout">
+            <aside class="employee-sidebar">
+              <div class="employee-sidebar-header">
+                <h3>Select Employee</h3>
+              </div>
+              <div class="employee-list" id="employeeList"></div>
+            </aside>
+
+            <main class="main-panel">
+              <div class="panel-header">
+                <div class="panel-employee-info">
+                  <h2 id="selectedEmployeeName">-</h2>
+                  <div
+                    class="panel-employee-stats"
+                    id="selectedEmployeeStats"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="tabs">
+                <div class="tab active" data-tab="attendance">
+                  Attendance Log
+                </div>
+                <div class="tab" data-tab="leave">Leave Requests</div>
+              </div>
+
+              <div class="tab-content active" id="attendanceTab">
+                <div class="table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="tab-content" id="leaveTab">
+                <div class="table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="leaveTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="requestModal">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="requestModalTitle"
+      >
+        <div class="modal-header">
+          <h3 id="requestModalTitle">New Leave Request</h3>
+          <button
+            class="modal-close"
+            id="closeModal"
+            type="button"
+            aria-label="Close"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="leaveRequestForm">
+            <div class="form-group">
+              <label class="form-label" for="employeeSelect">Employee</label>
+              <select class="form-control" id="employeeSelect" required>
+                <option value="">Select employee</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leaveType">Leave Type</label>
+              <select class="form-control" id="leaveType" required>
+                <option value="">Select type</option>
+                <option value="Annual">Annual Leave</option>
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Personal">Personal Leave</option>
+                <option value="Remote">Remote Work</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="startDate">Start Date</label>
+                <input
+                  class="form-control"
+                  type="date"
+                  id="startDate"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="endDate">End Date</label>
+                <input class="form-control" type="date" id="endDate" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reason">Reason</label>
+              <textarea
+                class="form-control"
+                id="reason"
+                rows="3"
+                required
+                placeholder="Brief description..."
+              ></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button class="btn-secondary" type="button" id="cancelBtn">
+                Cancel
+              </button>
+              <button class="btn-primary" type="submit">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="leave.js"></script>
+  </body>
+</html>
