@@ -1,0 +1,794 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --primary:#0a2f3f;
+    --primary-light:#134a61;
+    --accent:#0ea5e9;
+    --background:#f4f8fb;
+    --surface:#ffffff;
+    --border:#e2e8f0;
+    --text:#0f172a;
+    --muted:#64748b;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --shadow:0 8px 24px rgba(15,23,42,.08);
+    --radius:16px;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--background);
+    color:var(--text);
+    line-height:1.5;
+}
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:260px;
+    background:#0a2f3f;
+    color:#e6f2f8;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.logo-icon{
+    font-size:22px;
+    color:#38bdf8;
+}
+
+.logo h2{
+    font-weight:900;
+}
+
+.logo span{
+    font-size:13px;
+    color:#b8d6e6;
+}
+
+nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
+}
+
+nav a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px;
+    color:#b8d6e6;
+    text-decoration:none;
+    border-radius:10px;
+    transition:.2s;
+    font-weight:600;
+}
+
+nav a:hover,
+nav a.active{
+    background:#134a61;
+    color:#fff;
+}
+
+.logout-link-mobile-nav{
+    display:none;
+}
+
+.sidebar-footer{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:auto;
+    font-size:14px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#155e75;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+}
+
+.logout-btn{
+    width:auto;
+    margin-left:auto;
+    padding:6px;
+    border:none;
+    background:none;
+    color:#38bdf8;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.logout-btn:hover{
+    color:#fff;
+}
+
+.main-content{
+    flex:1;
+    padding:26px;
+}
+
+.top-navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    padding-bottom:15px;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.breadcrumb{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:14px;
+    color:#64748b;
+    font-weight:500;
+}
+
+.breadcrumb span:first-child{
+    color:#0a2f3f;
+    font-weight:700;
+}
+
+.admin-section{
+    display:flex;
+    align-items:center;
+}
+
+.admin-date{
+    color:#64748b;
+    font-size:14px;
+    font-weight:600;
+}
+
+header{
+    margin-bottom:26px;
+}
+
+header h1{
+    font-size:30px;
+    font-weight:900;
+    color:#0a2f3f;
+}
+
+header span{
+    color:#64748b;
+    font-weight:500;
+}
+
+.content{
+    display:flex;
+    gap:22px;
+}
+
+.left-column{
+    width:350px;
+}
+
+.right-column{
+    flex:1;
+}
+
+.card{
+    background:#fff;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:16px;
+    border:1px solid #e2e8f0;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.card h2,
+.card h3{
+    font-weight:900;
+    color:#0a2f3f;
+    margin-bottom:12px;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    font-size:13px;
+    color:#334155;
+    font-weight:700;
+}
+
+select,
+input{
+    width:100%;
+    padding:11px;
+    margin-top:6px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    background:#f8fafc;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    margin-top:14px;
+    border:none;
+    border-radius:12px;
+    background:#0ea5e9;
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button:hover{
+    background:#0284c7;
+}
+
+.summary-item{
+    display:flex;
+    justify-content:space-between;
+    margin-top:12px;
+    font-weight:700;
+}
+
+.summary-item span{
+    color:#475569;
+}
+
+.empty-state{
+    background:#fff;
+    padding:60px;
+    text-align:center;
+    border-radius:16px;
+    border:1px solid #e2e8f0;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);
+}
+
+.payslip{
+    background:#fff;
+    padding:26px;
+    border-radius:16px;
+    border:1px solid #e2e8f0;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);
+}
+
+.payslip-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding-bottom:16px;
+    border-bottom:2px solid #e2e8f0;
+    margin-bottom:22px;
+}
+
+.payslip-header h2{
+    font-weight:900;
+    color:#0a2f3f;
+}
+
+.payslip-header span{
+    font-size:12px;
+    color:#64748b;
+    font-weight:700;
+}
+
+.employee-info{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    padding:18px;
+    border-radius:14px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    margin-bottom:22px;
+}
+
+.employee-info small{
+    color:#64748b;
+    font-size:12px;
+    font-weight:700;
+}
+
+.employee-info h4{
+    font-weight:900;
+}
+
+.salary-section{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.earnings,
+.deductions{
+    padding:18px;
+    border-radius:14px;
+    border:1px solid #e2e8f0;
+    background:#fff;
+}
+
+.earnings{
+    border-left:6px solid #16a34a;
+}
+
+.deductions{
+    border-left:6px solid #dc2626;
+}
+
+.earnings h3,
+.deductions h3{
+    font-weight:900;
+    margin-bottom:14px;
+}
+
+.earnings strong{
+    color:#16a34a;
+}
+
+.deductions strong{
+    color:#dc2626;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+    font-weight:700;
+}
+
+.row span{
+    color:#475569;
+}
+
+.row.total{
+    margin-top:12px;
+    padding-top:10px;
+    border-top:1px solid #e2e8f0;
+    font-weight:900;
+}
+
+.net-pay{
+    margin-top:22px;
+    padding:20px;
+    text-align:center;
+    border-radius:14px;
+    background:#0a2f3f;
+    color:#16a34a;
+}
+
+.net-pay span{
+    font-size:12px;
+    letter-spacing:1px;
+    color:white;
+    font-weight:800;
+}
+
+.net-pay h1{
+    margin-top:6px;
+    font-size:34px;
+    font-weight:900;
+}
+
+.pdf-btn{
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#0a2f3f;
+    color:#fff;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.pdf-btn:hover{
+    background:#071c27;
+}
+
+.print-btn{
+    width:100%;
+    margin-top:12px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#e2e8f0;
+    color:#0f172a;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.print-btn:hover{
+    background:#cbd5e1;
+}
+
+.download-message{
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    border-radius:10px;
+    background:#dcfce7;
+    color:#166534;
+    font-weight:700;
+    text-align:center;
+    border:1px solid #86efac;
+}
+
+.download-message.show{
+    display:block;
+}
+
+.hidden{
+    display:none;
+}
+
+.menu-btn{
+    display:none;
+    position:fixed;
+    top:15px;
+    left:15px;
+    width:auto;
+    margin:0;
+    padding:10px 14px;
+    border:none;
+    border-radius:8px;
+    background:#0a2f3f;
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    z-index:1001;
+}
+
+
+@media (max-width:992px){
+
+    .content{
+        flex-direction:column;
+    }
+
+    .left-column{
+        width:100%;
+    }
+
+    .salary-section{
+        grid-template-columns:1fr;
+    }
+
+    .employee-info{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .payslip-header{
+        flex-direction:column;
+        gap:12px;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        height:auto;
+        position:relative;
+        padding:15px;
+    }
+
+    .logo{
+        margin-bottom:15px;
+    }
+
+    .sidebar nav{
+        display:flex;
+        flex-direction:row;
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .sidebar nav a{
+        flex:1 1 160px;
+        justify-content:center;
+    }
+
+    .logout-link-mobile-nav{
+        display:flex;
+        flex:1 1 160px;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .sidebar-footer{
+        display:none;
+    }
+
+    .logout-btn{
+        display:none;
+    }
+
+    .main-content{
+        padding:18px;
+    }
+
+    header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    header h1{
+        font-size:24px;
+    }
+
+    .employee-info{
+        grid-template-columns:1fr;
+    }
+
+    .card,
+    .payslip,
+    .empty-state{
+        padding:18px;
+    }
+
+    .net-pay h1{
+        font-size:28px;
+    }
+
+    .top-navbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+}
+
+@media (max-width:480px){
+
+    .sidebar{
+        padding:10px;
+    }
+
+    .logo{
+        justify-content:center;
+        margin-bottom:10px;
+    }
+
+    .logo h2{
+        font-size:20px;
+    }
+
+    .logo span{
+        font-size:12px;
+    }
+
+    .logo-icon{
+        font-size:20px;
+    }
+
+    .sidebar nav{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:5px;
+        width:100%;
+    }
+
+    .sidebar nav a{
+        flex:none;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        padding:8px 2px;
+        font-size:10px;
+        text-align:center;
+        gap:3px;
+    }
+
+    .sidebar nav a i{
+        font-size:16px;
+        margin:0;
+    }
+
+    .logout-link-mobile-nav{
+        grid-column:1 / -1;
+        flex-direction:row !important;
+        justify-content:center;
+        gap:8px;
+        padding:9px;
+        font-size:12px;
+        margin-top:5px;
+    }
+
+    .logout-link-mobile-nav i{
+        font-size:15px;
+    }
+
+    .main-content{
+        padding:12px;
+    }
+
+    .top-navbar{
+        margin-top:10px;
+        margin-bottom:15px;
+        padding-bottom:10px;
+    }
+
+    .breadcrumb{
+        font-size:12px;
+    }
+
+    .admin-date{
+        font-size:12px;
+    }
+
+    header{
+        margin-bottom:15px;
+    }
+
+    header h1{
+        font-size:21px;
+    }
+
+    header span{
+        font-size:13px;
+    }
+
+    .content{
+        gap:12px;
+    }
+
+    .card,
+    .payslip,
+    .empty-state{
+        padding:12px;
+        border-radius:12px;
+    }
+
+    .card{
+        margin-bottom:12px;
+    }
+
+    .employee-info{
+        gap:8px;
+        padding:12px;
+        margin-bottom:12px;
+    }
+
+    .salary-section{
+        gap:10px;
+    }
+
+    .earnings,
+    .deductions{
+        padding:12px;
+    }
+
+    .row{
+        margin:7px 0;
+        font-size:13px;
+    }
+
+    .net-pay{
+        margin-top:12px;
+        padding:15px;
+    }
+
+    .net-pay h1{
+        font-size:23px;
+    }
+
+    .pdf-btn,
+    .print-btn{
+        padding:11px;
+        margin-top:10px;
+    }
+
+}
+
+@media print{
+
+    @page{
+        size:A4 landscape;
+        margin:15mm;
+    }
+
+    body{
+        background:#fff !important;
+    }
+
+    .container,
+    .content{
+        display:block !important;
+        width:100% !important;
+    }
+
+    .sidebar,
+    .left-column,
+    .top-navbar,
+    .pdf-btn,
+    .print-btn,
+    .menu-btn,
+    header{
+        display:none !important;
+    }
+
+    .main-content,
+    .right-column{
+        width:100% !important;
+        max-width:100% !important;
+        padding:0 !important;
+        margin:0 !important;
+    }
+
+        .payslip{
+        width:100% !important;
+        max-width:100% !important;
+        padding:20px !important;
+        border:none !important;
+        box-shadow:none !important;
+    }
+
+    .employee-info{
+        display:grid !important;
+        grid-template-columns:repeat(4,1fr) !important;
+        gap:15px !important;
+    }
+
+    .salary-section{
+        display:flex !important;
+        flex-direction:row !important;
+        width:100% !important;
+        gap:20px !important;
+    }
+
+    .earnings,
+    .deductions{
+        flex:1 !important;
+        width:50% !important;
+        padding:20px !important;
+        margin:0 !important;
+    }
+
+        .row{
+        display:flex !important;
+        justify-content:space-between !important;
+        align-items:center !important;
+        width:100% !important;
+        white-space:nowrap !important;
+    }
+
+    .row span{
+        text-align:left !important;
+    }
+
+    .row strong{
+        text-align:right !important;
+        margin-left:auto !important;
+    }
+
+    .net-pay{
+        margin-top:20px !important;
+        width:100% !important;
+    }
+
+}
