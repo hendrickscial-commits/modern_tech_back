@@ -148,6 +148,35 @@ VALUES
 
 (7, '2025-07-22', 'Vacation', 'Pending'),
 
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('HR', 'Manager', 'Employee') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_users_employee
+        FOREIGN KEY (employee_id)
+        REFERENCES employee_info(employee_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+INSERT INTO users
+    (employee_id, email, password_hash, role)
+VALUES
+    (1, 'hr@moderntech.co.za',
+     '$2b$10$EeXFwT7rsYCYbZeAUM7qM.zsmHrleDgT8HLcoMu9SFPAyookDrFbO',
+     'HR'),
+
+    (2, 'manager@moderntech.co.za',
+     '$2b$10$EeXFwT7rsYCYbZeAUM7qM.zsmHrleDgT8HLcoMu9SFPAyookDrFbO',
+     'Manager'),
+
+    (3, 'employee@moderntech.co.za',
+     '$2b$10$EeXFwT7rsYCYbZeAUM7qM.zsmHrleDgT8HLcoMu9SFPAyookDrFbO',
+     'Employee');
 (8, '2024-12-02', 'Medical Appointment', 'Approved'),
 
 (9, '2025-07-19', 'Childcare', 'Denied'),
