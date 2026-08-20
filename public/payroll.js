@@ -48,6 +48,29 @@ let employeeInformation = [];
 let payrollData = [];
 let editingPayrollId = null;
 
+const demoPayrollRecords = [
+    [1, "Sibongile Nkosi", "Software Engineer", "Development", 70000, 160, 8, 69500],
+    [2, "Lungile Moyo", "HR Manager", "HR", 80000, 150, 10, 79000],
+    [3, "Thabo Molefe", "Quality Analyst", "QA", 55000, 170, 4, 54800],
+    [4, "Keshav Naidoo", "Sales Representative", "Sales", 60000, 165, 6, 59700],
+    [5, "Zanele Khumalo", "Marketing Specialist", "Marketing", 58000, 158, 5, 57850],
+    [6, "Sipho Zulu", "UI/UX Designer", "Design", 65000, 168, 2, 64800],
+    [7, "Naledi Moeketsi", "DevOps Engineer", "IT", 72000, 175, 3, 71800],
+    [8, "Farai Gumbo", "Content Strategist", "Marketing", 56000, 160, 0, 56000],
+    [9, "Karabo Dlamini", "Accountant", "Finance", 62000, 155, 5, 61500],
+    [10, "Fatima Patel", "Customer Support Lead", "Support", 58000, 162, 4, 57750]
+].map(([employeeId, name, position, department, salary, hoursWorked, leaveDeductions, finalSalary], index) => ({
+    payrollId: index + 1,
+    employeeId,
+    name,
+    position,
+    department,
+    salary,
+    hoursWorked,
+    medicalAidDeduction: leaveDeductions,
+    finalSalary
+}));
+
 function formatCurrency(value) {
     return "R " + Number(value || 0).toLocaleString("en-ZA", {
         minimumFractionDigits: 2,
@@ -57,7 +80,7 @@ function formatCurrency(value) {
 
 async function loadAllEmployees() {
     try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
 
         const response = await fetch(EMPLOYEE_API_URL, {
             headers: {
@@ -85,13 +108,23 @@ async function loadAllEmployees() {
 
     } catch (error) {
         console.error("Failed to load employees:", error);
-        alert("Could not load employees.");
+
+        employeeInformation = demoPayrollRecords.map(({ employeeId, name, position, department, salary }) => ({
+            employeeId,
+            name,
+            position,
+            department,
+            salary
+        }));
+
+        loadEmployees();
+        loadPayrollEmployees();
     }
 }
 
 async function loadPayrollData() {
     try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
 
         const response = await fetch(API_URL, {
             headers: {
@@ -104,14 +137,13 @@ async function loadPayrollData() {
         }
 
         const result = await response.json();
+        const records = result.data || result;
 
-        if (!result.success) {
-            throw new Error(
-                result.message || "Failed to load payroll records"
-            );
+        if (!Array.isArray(records)) {
+            throw new Error(result.message || "Failed to load payroll records");
         }
 
-        payrollData = result.data.map(payroll => ({
+        payrollData = records.map(payroll => ({
             payrollId: payroll.payroll_id,
             employeeId: payroll.employee_id,
             hoursWorked: Number(payroll.hours_worked || 0),
@@ -122,10 +154,9 @@ async function loadPayrollData() {
         if (employeeInformation.length === 0) {
             const uniqueEmployees = [];
 
-            result.data.forEach(payroll => {
+            records.forEach(payroll => {
                 const exists = uniqueEmployees.find(
-                    employee =>
-                        employee.employeeId == payroll.employee_id
+                    employee => employee.employeeId == payroll.employee_id
                 );
 
                 if (!exists) {
@@ -149,7 +180,29 @@ async function loadPayrollData() {
 
     } catch (error) {
         console.error("Failed to load payroll:", error);
-        alert("Could not connect to the payroll server on port 2020.");
+
+        payrollData = demoPayrollRecords.map(({ payrollId, employeeId, hoursWorked, medicalAidDeduction, finalSalary }) => ({
+            payrollId,
+            employeeId,
+            hoursWorked,
+            medicalAidDeduction,
+            finalSalary
+        }));
+
+        if (employeeInformation.length === 0) {
+            employeeInformation = demoPayrollRecords.map(({ employeeId, name, position, department, salary }) => ({
+                employeeId,
+                name,
+                position,
+                department,
+                salary
+            }));
+        }
+
+        loadEmployees();
+        loadPayrollEmployees();
+        updateSummary();
+        displayPayrollRecords();
     }
 }
 
@@ -201,8 +254,7 @@ function updateSummary() {
 
 function generatePayslip() {
     const selectedPayroll = payrollData.find(
-        payroll =>
-            payroll.employeeId == employeeSelect.value
+        payroll => payroll.employeeId == employeeSelect.value
     );
 
     if (!selectedPayroll) {
@@ -211,8 +263,7 @@ function generatePayslip() {
     }
 
     const selectedEmployee = employeeInformation.find(
-        employee =>
-            employee.employeeId == selectedPayroll.employeeId
+        employee => employee.employeeId == selectedPayroll.employeeId
     );
 
     if (!selectedEmployee) {
@@ -220,8 +271,7 @@ function generatePayslip() {
         return;
     }
 
-    const selectedPeriod =
-        document.getElementById("period")?.value;
+    const selectedPeriod = document.getElementById("period")?.value;
 
     if (selectedPeriod && payPeriod) {
         const date = new Date(selectedPeriod + "-01");
@@ -237,9 +287,7 @@ function generatePayslip() {
     if (employeeCode) {
         employeeCode.textContent =
             "E" +
-            selectedPayroll.employeeId
-                .toString()
-                .padStart(3, "0");
+            selectedPayroll.employeeId.toString().padStart(3, "0");
     }
 
     if (empName) empName.textContent = selectedEmployee.name;
@@ -247,8 +295,7 @@ function generatePayslip() {
     if (empPosition) empPosition.textContent = selectedEmployee.position;
 
     if (empHours) {
-        empHours.textContent =
-            selectedPayroll.hoursWorked + " hrs";
+        empHours.textContent = selectedPayroll.hoursWorked + " hrs";
     }
 
     const basicSalary = selectedEmployee.salary;
@@ -294,6 +341,7 @@ function generatePayslip() {
 
     if (tax) tax.textContent = "-" + formatCurrency(taxAmount);
     if (pension) pension.textContent = "-" + formatCurrency(pensionAmount);
+
     if (medicalAid) {
         medicalAid.textContent =
             "-" + formatCurrency(medicalAidAmount);
@@ -324,7 +372,7 @@ function generatePayslip() {
             tax: taxAmount,
             pension: pensionAmount,
             medicalAid: medicalAidAmount,
-            deductions: deductions,
+            deductions,
             netPay: netSalary
         })
     );
@@ -359,8 +407,7 @@ function displayPayrollRecords() {
 
     payrollData.forEach(payroll => {
         const employee = employeeInformation.find(
-            employee =>
-                employee.employeeId == payroll.employeeId
+            employee => employee.employeeId == payroll.employeeId
         );
 
         if (!employee) return;
@@ -446,8 +493,7 @@ function showAddPayrollForm() {
 
 function editPayroll(id) {
     const payroll = payrollData.find(
-        record =>
-            record.payrollId == id
+        record => record.payrollId == id
     );
 
     if (!payroll) {
@@ -540,9 +586,11 @@ async function savePayroll() {
     };
 
     try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
 
-        let response;
+        if (!token) {
+            throw new Error("You are not logged in.");
+        }
 
         const options = {
             headers: {
@@ -551,6 +599,8 @@ async function savePayroll() {
             },
             body: JSON.stringify(payroll)
         };
+
+        let response;
 
         if (editingPayrollId) {
             response = await fetch(
@@ -572,7 +622,14 @@ async function savePayroll() {
 
         const result = await response.json();
 
-        if (!response.ok || !result.success) {
+        if (!response.ok) {
+            throw new Error(
+                result.message ||
+                `Payroll operation failed with status ${response.status}.`
+            );
+        }
+
+        if (result.success === false) {
             throw new Error(
                 result.message ||
                 "Payroll operation failed."
@@ -598,7 +655,7 @@ async function savePayroll() {
 
         alert(
             error.message ||
-            "Unable to save payroll."
+            "Unable to save payroll. Please check the server and database connection."
         );
     }
 }
@@ -611,7 +668,11 @@ async function deletePayroll(id) {
     if (!confirmed) return;
 
     try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            throw new Error("You are not logged in.");
+        }
 
         const response = await fetch(
             `${API_URL}/${id}`,
@@ -625,7 +686,14 @@ async function deletePayroll(id) {
 
         const result = await response.json();
 
-        if (!response.ok || !result.success) {
+        if (!response.ok) {
+            throw new Error(
+                result.message ||
+                `Failed to delete payroll. Status: ${response.status}`
+            );
+        }
+
+        if (result.success === false) {
             throw new Error(
                 result.message ||
                 "Failed to delete payroll."
@@ -724,9 +792,7 @@ if (downloadPdfBtn) {
                 printBtn.style.display = "";
 
                 const message =
-                    document.getElementById(
-                        "downloadMessage"
-                    );
+                    document.getElementById("downloadMessage");
 
                 if (message) {
                     message.classList.add("show");
@@ -755,7 +821,7 @@ if (printBtn) {
 }
 
 function logout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userEmail");
     window.location.href = "index.html";
@@ -874,8 +940,17 @@ function loadSavedPayslip() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    localStorage.removeItem("lastPayslip");
+
+    if (emptyState) {
+        emptyState.classList.remove("hidden");
+    }
+
+    if (payslip) {
+        payslip.classList.add("hidden");
+    }
+
     loadAllEmployees();
     loadPayrollData();
     displayCurrentDate();
-    loadSavedPayslip();
 });
