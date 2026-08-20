@@ -38,17 +38,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/employees", employeeRoutes);
-
 app.use("/auth", authRoutes);
-
 app.use("/payroll", payrollRoutes);
 
+// Leave routes
 app.get("/leave", getLeaveCon);
 app.get("/leave/:employee_id", getLeaveByIdCon);
 app.put("/leave/:leave_id/accept", acceptLeaveCon);
 app.put("/leave/:leave_id/deny", denyLeaveCon);
 app.post("/leave", postLeaveCon);
 
+// Attendance routes
 app.get("/attendance", getAttendanceCon);
 app.get("/attendance/a/:attendance_date", getAttendanceByDateCon);
 app.get("/attendance/:employee_id", getAttendanceByIdCon);
