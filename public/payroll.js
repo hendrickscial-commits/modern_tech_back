@@ -1,4 +1,5 @@
 const API_URL = "http://127.0.0.1:2020/payroll";
+const EMPLOYEE_API_URL = "http://127.0.0.1:2020/employees";
 
 const employeeSelect = document.getElementById("employee");
 const generateBtn = document.getElementById("generateBtn");
@@ -30,35 +31,18 @@ const totalDeductions = document.getElementById("totalDeductions");
 
 const netPay = document.getElementById("netPay");
 
-const activeEmployeesEl =
-    document.getElementById("activeEmployees");
+const activeEmployeesEl = document.getElementById("activeEmployees");
+const totalPayrollEl = document.getElementById("totalPayroll");
+const averageSalaryEl = document.getElementById("averageSalary");
+const annualPayrollEl = document.getElementById("annualPayroll");
 
-const totalPayrollEl =
-    document.getElementById("totalPayroll");
+const payrollRecordsToggle = document.getElementById("payrollRecordsToggle");
+const payrollRecordsContent = document.getElementById("payrollRecordsContent");
+const recordsArrow = document.getElementById("recordsArrow");
 
-const averageSalaryEl =
-    document.getElementById("averageSalary");
-
-const annualPayrollEl =
-    document.getElementById("annualPayroll");
-
-const payrollRecordsToggle =
-    document.getElementById("payrollRecordsToggle");
-
-const payrollRecordsContent =
-    document.getElementById("payrollRecordsContent");
-
-const recordsArrow =
-    document.getElementById("recordsArrow");
-
-const addPayrollBtn =
-    document.getElementById("addPayrollBtn");
-
-const savePayrollBtn =
-    document.getElementById("savePayrollBtn");
-
-const cancelPayrollBtn =
-    document.getElementById("cancelPayrollBtn");
+const addPayrollBtn = document.getElementById("addPayrollBtn");
+const savePayrollBtn = document.getElementById("savePayrollBtn");
+const cancelPayrollBtn = document.getElementById("cancelPayrollBtn");
 
 let employeeInformation = [];
 let payrollData = [];
@@ -71,9 +55,49 @@ function formatCurrency(value) {
     });
 }
 
+async function loadAllEmployees() {
+    try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(EMPLOYEE_API_URL, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server returned ${response.status}`);
+        }
+
+        const result = await response.json();
+        const employees = result.data || result;
+
+        employeeInformation = employees.map(employee => ({
+            employeeId: employee.employee_id,
+            name: employee.name,
+            position: employee.position,
+            department: employee.department,
+            salary: Number(employee.salary || 0)
+        }));
+
+        loadEmployees();
+        loadPayrollEmployees();
+
+    } catch (error) {
+        console.error("Failed to load employees:", error);
+        alert("Could not load employees.");
+    }
+}
+
 async function loadPayrollData() {
     try {
-        const response = await fetch(API_URL);
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(API_URL, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
         if (!response.ok) {
             throw new Error(`Server returned ${response.status}`);
@@ -91,45 +115,41 @@ async function loadPayrollData() {
             payrollId: payroll.payroll_id,
             employeeId: payroll.employee_id,
             hoursWorked: Number(payroll.hours_worked || 0),
-            medicalAidDeduction: Number(
-                payroll.leave_deductions || 0
-            ),
+            medicalAidDeduction: Number(payroll.leave_deductions || 0),
             finalSalary: Number(payroll.final_salary || 0)
         }));
 
-        const uniqueEmployees = [];
+        if (employeeInformation.length === 0) {
+            const uniqueEmployees = [];
 
-        result.data.forEach(payroll => {
-            const exists = uniqueEmployees.find(
-                employee =>
-                    employee.employeeId == payroll.employee_id
-            );
+            result.data.forEach(payroll => {
+                const exists = uniqueEmployees.find(
+                    employee =>
+                        employee.employeeId == payroll.employee_id
+                );
 
-            if (!exists) {
-                uniqueEmployees.push({
-                    employeeId: payroll.employee_id,
-                    name: payroll.name,
-                    position: payroll.position,
-                    department: payroll.department,
-                    salary: Number(payroll.salary || 0)
-                });
-            }
-        });
+                if (!exists) {
+                    uniqueEmployees.push({
+                        employeeId: payroll.employee_id,
+                        name: payroll.name,
+                        position: payroll.position,
+                        department: payroll.department,
+                        salary: Number(payroll.salary || 0)
+                    });
+                }
+            });
 
-        employeeInformation = uniqueEmployees;
+            employeeInformation = uniqueEmployees;
+        }
 
         loadEmployees();
+        loadPayrollEmployees();
         updateSummary();
         displayPayrollRecords();
 
-        console.log("Payroll loaded:", payrollData);
-
     } catch (error) {
         console.error("Failed to load payroll:", error);
-
-        alert(
-            "Could not connect to the payroll server on port 2020."
-        );
+        alert("Could not connect to the payroll server on port 2020.");
     }
 }
 
@@ -151,8 +171,7 @@ function loadEmployees() {
 
 function updateSummary() {
     const totalPayroll = payrollData.reduce(
-        (total, payroll) =>
-            total + payroll.finalSalary,
+        (total, payroll) => total + payroll.finalSalary,
         0
     );
 
@@ -164,31 +183,26 @@ function updateSummary() {
             : 0;
 
     if (activeEmployeesEl) {
-        activeEmployeesEl.textContent =
-            payrollData.length;
+        activeEmployeesEl.textContent = payrollData.length;
     }
 
     if (totalPayrollEl) {
-        totalPayrollEl.textContent =
-            formatCurrency(totalPayroll);
+        totalPayrollEl.textContent = formatCurrency(totalPayroll);
     }
 
     if (averageSalaryEl) {
-        averageSalaryEl.textContent =
-            formatCurrency(averageSalary);
+        averageSalaryEl.textContent = formatCurrency(averageSalary);
     }
 
     if (annualPayrollEl) {
-        annualPayrollEl.textContent =
-            formatCurrency(annualPayroll);
+        annualPayrollEl.textContent = formatCurrency(annualPayroll);
     }
 }
 
 function generatePayslip() {
     const selectedPayroll = payrollData.find(
         payroll =>
-            payroll.employeeId ==
-            employeeSelect.value
+            payroll.employeeId == employeeSelect.value
     );
 
     if (!selectedPayroll) {
@@ -196,12 +210,10 @@ function generatePayslip() {
         return;
     }
 
-    const selectedEmployee =
-        employeeInformation.find(
-            employee =>
-                employee.employeeId ==
-                selectedPayroll.employeeId
-        );
+    const selectedEmployee = employeeInformation.find(
+        employee =>
+            employee.employeeId == selectedPayroll.employeeId
+    );
 
     if (!selectedEmployee) {
         alert("Employee information not found.");
@@ -212,8 +224,7 @@ function generatePayslip() {
         document.getElementById("period")?.value;
 
     if (selectedPeriod && payPeriod) {
-        const date =
-            new Date(selectedPeriod + "-01");
+        const date = new Date(selectedPeriod + "-01");
 
         payPeriod.textContent =
             "Pay Period: " +
@@ -231,40 +242,24 @@ function generatePayslip() {
                 .padStart(3, "0");
     }
 
-    if (empName) {
-        empName.textContent =
-            selectedEmployee.name;
-    }
-
-    if (empDept) {
-        empDept.textContent =
-            selectedEmployee.department;
-    }
-
-    if (empPosition) {
-        empPosition.textContent =
-            selectedEmployee.position;
-    }
+    if (empName) empName.textContent = selectedEmployee.name;
+    if (empDept) empDept.textContent = selectedEmployee.department;
+    if (empPosition) empPosition.textContent = selectedEmployee.position;
 
     if (empHours) {
         empHours.textContent =
             selectedPayroll.hoursWorked + " hrs";
     }
 
-    const basicSalary =
-        selectedEmployee.salary;
+    const basicSalary = selectedEmployee.salary;
+    const yearlySalary = basicSalary * 12;
 
-    const yearlySalary =
-        basicSalary * 12;
+    const overtimeHours = Math.max(
+        selectedPayroll.hoursWorked - 160,
+        0
+    );
 
-    const overtimeHours =
-        Math.max(
-            selectedPayroll.hoursWorked - 160,
-            0
-        );
-
-    const overtimePay =
-        overtimeHours * 250;
+    const overtimePay = overtimeHours * 250;
 
     const bonusPay =
         basicSalary >= 70000
@@ -276,11 +271,8 @@ function generatePayslip() {
         overtimePay +
         bonusPay;
 
-    const taxAmount =
-        grossPay * 0.18;
-
-    const pensionAmount =
-        grossPay * 0.05;
+    const taxAmount = grossPay * 0.18;
+    const pensionAmount = grossPay * 0.05;
 
     const medicalAidAmount =
         selectedPayroll.medicalAidDeduction * 250;
@@ -294,41 +286,14 @@ function generatePayslip() {
         grossPay -
         deductions;
 
-    if (salary) {
-        salary.textContent =
-            formatCurrency(basicSalary);
-    }
+    if (salary) salary.textContent = formatCurrency(basicSalary);
+    if (annualSalary) annualSalary.textContent = formatCurrency(yearlySalary);
+    if (overtime) overtime.textContent = formatCurrency(overtimePay);
+    if (bonus) bonus.textContent = formatCurrency(bonusPay);
+    if (gross) gross.textContent = formatCurrency(grossPay);
 
-    if (annualSalary) {
-        annualSalary.textContent =
-            formatCurrency(yearlySalary);
-    }
-
-    if (overtime) {
-        overtime.textContent =
-            formatCurrency(overtimePay);
-    }
-
-    if (bonus) {
-        bonus.textContent =
-            formatCurrency(bonusPay);
-    }
-
-    if (gross) {
-        gross.textContent =
-            formatCurrency(grossPay);
-    }
-
-    if (tax) {
-        tax.textContent =
-            "-" + formatCurrency(taxAmount);
-    }
-
-    if (pension) {
-        pension.textContent =
-            "-" + formatCurrency(pensionAmount);
-    }
-
+    if (tax) tax.textContent = "-" + formatCurrency(taxAmount);
+    if (pension) pension.textContent = "-" + formatCurrency(pensionAmount);
     if (medicalAid) {
         medicalAid.textContent =
             "-" + formatCurrency(medicalAidAmount);
@@ -340,43 +305,27 @@ function generatePayslip() {
     }
 
     if (netPay) {
-        netPay.textContent =
-            formatCurrency(netSalary);
+        netPay.textContent = formatCurrency(netSalary);
     }
 
     localStorage.setItem(
         "lastPayslip",
         JSON.stringify({
-            employeeId:
-                selectedEmployee.employeeId,
-            name:
-                selectedEmployee.name,
-            department:
-                selectedEmployee.department,
-            position:
-                selectedEmployee.position,
-            hours:
-                selectedPayroll.hoursWorked,
-            salary:
-                basicSalary,
-            annualSalary:
-                yearlySalary,
-            overtime:
-                overtimePay,
-            bonus:
-                bonusPay,
-            gross:
-                grossPay,
-            tax:
-                taxAmount,
-            pension:
-                pensionAmount,
-            medicalAid:
-                medicalAidAmount,
-            deductions:
-                deductions,
-            netPay:
-                netSalary
+            employeeId: selectedEmployee.employeeId,
+            name: selectedEmployee.name,
+            department: selectedEmployee.department,
+            position: selectedEmployee.position,
+            hours: selectedPayroll.hoursWorked,
+            salary: basicSalary,
+            annualSalary: yearlySalary,
+            overtime: overtimePay,
+            bonus: bonusPay,
+            gross: grossPay,
+            tax: taxAmount,
+            pension: pensionAmount,
+            medicalAid: medicalAidAmount,
+            deductions: deductions,
+            netPay: netSalary
         })
     );
 
@@ -391,9 +340,7 @@ function generatePayslip() {
 
 function displayPayrollRecords() {
     const tableBody =
-        document.getElementById(
-            "payrollTableBody"
-        );
+        document.getElementById("payrollTableBody");
 
     if (!tableBody) return;
 
@@ -411,17 +358,14 @@ function displayPayrollRecords() {
     }
 
     payrollData.forEach(payroll => {
-        const employee =
-            employeeInformation.find(
-                employee =>
-                    employee.employeeId ==
-                    payroll.employeeId
-            );
+        const employee = employeeInformation.find(
+            employee =>
+                employee.employeeId == payroll.employeeId
+        );
 
         if (!employee) return;
 
-        const row =
-            document.createElement("tr");
+        const row = document.createElement("tr");
 
         row.innerHTML = `
             <td style="padding:12px;">
@@ -461,9 +405,7 @@ function displayPayrollRecords() {
 
 function loadPayrollEmployees() {
     const select =
-        document.getElementById(
-            "payrollEmployee"
-        );
+        document.getElementById("payrollEmployee");
 
     if (!select) return;
 
@@ -471,14 +413,10 @@ function loadPayrollEmployees() {
         '<option value="" disabled selected>Select Employee</option>';
 
     employeeInformation.forEach(employee => {
-        const option =
-            document.createElement("option");
+        const option = document.createElement("option");
 
-        option.value =
-            employee.employeeId;
-
-        option.textContent =
-            employee.name;
+        option.value = employee.employeeId;
+        option.textContent = employee.name;
 
         select.appendChild(option);
     });
@@ -488,82 +426,56 @@ function showAddPayrollForm() {
     editingPayrollId = null;
 
     const form =
-        document.getElementById(
-            "payrollForm"
-        );
+        document.getElementById("payrollForm");
 
     const title =
-        document.getElementById(
-            "formTitle"
-        );
+        document.getElementById("formTitle");
 
     if (title) {
-        title.textContent =
-            "Add Payroll";
+        title.textContent = "Add Payroll";
     }
 
     loadPayrollEmployees();
 
-    document.getElementById(
-        "payrollEmployee"
-    ).value = "";
-
-    document.getElementById(
-        "hoursWorked"
-    ).value = "";
-
-    document.getElementById(
-        "leaveDeductions"
-    ).value = "";
+    document.getElementById("payrollEmployee").value = "";
+    document.getElementById("hoursWorked").value = "";
+    document.getElementById("leaveDeductions").value = "";
 
     form.classList.remove("hidden");
 }
 
 function editPayroll(id) {
-    const payroll =
-        payrollData.find(
-            record =>
-                record.payrollId == id
-        );
+    const payroll = payrollData.find(
+        record =>
+            record.payrollId == id
+    );
 
     if (!payroll) {
         alert("Payroll record not found.");
         return;
     }
 
-    editingPayrollId =
-        payroll.payrollId;
+    editingPayrollId = payroll.payrollId;
 
     const form =
-        document.getElementById(
-            "payrollForm"
-        );
+        document.getElementById("payrollForm");
 
     const title =
-        document.getElementById(
-            "formTitle"
-        );
+        document.getElementById("formTitle");
 
     loadPayrollEmployees();
 
     if (title) {
-        title.textContent =
-            "Edit Payroll";
+        title.textContent = "Edit Payroll";
     }
 
-    document.getElementById(
-        "payrollEmployee"
-    ).value =
+    document.getElementById("payrollEmployee").value =
         payroll.employeeId;
 
-    document.getElementById(
-        "hoursWorked"
-    ).value =
+    document.getElementById("hoursWorked").value =
         payroll.hoursWorked;
 
-    document.getElementById(
-        "leaveDeductions"
-    ).value =
+    document.getElementById("leaveDeductions").value =
         payroll.medicalAidDeduction;
 
     form.classList.remove("hidden");
@@ -575,13 +487,8 @@ function editPayroll(id) {
         payrollRecordsContent.classList.remove("hidden");
 
         if (recordsArrow) {
-            recordsArrow.classList.remove(
-                "fa-chevron-down"
-            );
-
-            recordsArrow.classList.add(
-                "fa-chevron-up"
-            );
+            recordsArrow.classList.remove("fa-chevron-down");
+            recordsArrow.classList.add("fa-chevron-up");
         }
     }
 }
@@ -590,28 +497,20 @@ function cancelPayroll() {
     editingPayrollId = null;
 
     const form =
-        document.getElementById(
-            "payrollForm"
-        );
+        document.getElementById("payrollForm");
 
     form.classList.add("hidden");
 }
 
 async function savePayroll() {
     const employeeId =
-        document.getElementById(
-            "payrollEmployee"
-        ).value;
+        document.getElementById("payrollEmployee").value;
 
     const hoursValue =
-        document.getElementById(
-            "hoursWorked"
-        ).value;
+        document.getElementById("hoursWorked").value;
 
     const leaveValue =
-        document.getElementById(
-            "leaveDeductions"
-        ).value;
+        document.getElementById("leaveDeductions").value;
 
     if (!employeeId) {
         alert("Please select an employee.");
@@ -635,56 +534,45 @@ async function savePayroll() {
     }
 
     const payroll = {
-        employee_id:
-            Number(employeeId),
-
-        hours_worked:
-            Number(hoursValue),
-
-        leave_deductions:
-            Number(leaveValue)
+        employee_id: Number(employeeId),
+        hours_worked: Number(hoursValue),
+        leave_deductions: Number(leaveValue)
     };
 
     try {
+        const token = localStorage.getItem("token");
+
         let response;
 
+        const options = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(payroll)
+        };
+
         if (editingPayrollId) {
-            response =
-                await fetch(
-                    `${API_URL}/${editingPayrollId}`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        body:
-                            JSON.stringify(payroll)
-                    }
-                );
+            response = await fetch(
+                `${API_URL}/${editingPayrollId}`,
+                {
+                    ...options,
+                    method: "PUT"
+                }
+            );
         } else {
-            response =
-                await fetch(
-                    API_URL,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        body:
-                            JSON.stringify(payroll)
-                    }
-                );
+            response = await fetch(
+                API_URL,
+                {
+                    ...options,
+                    method: "POST"
+                }
+            );
         }
 
-        const result =
-            await response.json();
+        const result = await response.json();
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.message ||
                 "Payroll operation failed."
@@ -699,17 +587,14 @@ async function savePayroll() {
 
         editingPayrollId = null;
 
-        document.getElementById(
-            "payrollForm"
-        ).classList.add("hidden");
+        document
+            .getElementById("payrollForm")
+            .classList.add("hidden");
 
         await loadPayrollData();
 
     } catch (error) {
-        console.error(
-            "Payroll save error:",
-            error
-        );
+        console.error("Payroll save error:", error);
 
         alert(
             error.message ||
@@ -719,48 +604,40 @@ async function savePayroll() {
 }
 
 async function deletePayroll(id) {
-    const confirmed =
-        confirm(
-            "Are you sure you want to delete this payroll record?"
-        );
+    const confirmed = confirm(
+        "Are you sure you want to delete this payroll record?"
+    );
 
-    if (!confirmed) {
-        return;
-    }
+    if (!confirmed) return;
 
     try {
-        const response =
-            await fetch(
-                `${API_URL}/${id}`,
-                {
-                    method: "DELETE"
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+            `${API_URL}/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            );
+            }
+        );
 
-        const result =
-            await response.json();
+        const result = await response.json();
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.message ||
                 "Failed to delete payroll."
             );
         }
 
-        alert(
-            "Payroll deleted successfully."
-        );
+        alert("Payroll deleted successfully.");
 
         await loadPayrollData();
 
     } catch (error) {
-        console.error(
-            "Delete payroll error:",
-            error
-        );
+        console.error("Delete payroll error:", error);
 
         alert(
             error.message ||
@@ -770,22 +647,12 @@ async function deletePayroll(id) {
 }
 
 if (payrollRecordsToggle) {
-    payrollRecordsToggle.addEventListener(
-        "click",
-        () => {
-            payrollRecordsContent.classList.toggle(
-                "hidden"
-            );
+    payrollRecordsToggle.addEventListener("click", () => {
+        payrollRecordsContent.classList.toggle("hidden");
 
-            recordsArrow.classList.toggle(
-                "fa-chevron-down"
-            );
-
-            recordsArrow.classList.toggle(
-                "fa-chevron-up"
-            );
-        }
-    );
+        recordsArrow.classList.toggle("fa-chevron-down");
+        recordsArrow.classList.toggle("fa-chevron-up");
+    });
 }
 
 if (addPayrollBtn) {
@@ -817,87 +684,65 @@ if (generateBtn) {
 }
 
 if (downloadPdfBtn) {
-    downloadPdfBtn.addEventListener(
-        "click",
-        () => {
-            if (
-                payslip.classList.contains(
-                    "hidden"
-                )
-            ) {
-                alert(
-                    "Please generate a payslip first."
-                );
-                return;
-            }
-
-            downloadPdfBtn.style.display =
-                "none";
-
-            printBtn.style.display =
-                "none";
-
-            const options = {
-                margin: 5,
-                filename:
-                    `${empName.textContent}-Payslip.pdf`,
-                image: {
-                    type: "jpeg",
-                    quality: 1
-                },
-                html2canvas: {
-                    scale: 1.5,
-                    scrollY: 0,
-                    useCORS: true
-                },
-                jsPDF: {
-                    unit: "mm",
-                    format: "a4",
-                    orientation: "portrait"
-                }
-            };
-
-            html2pdf()
-                .set(options)
-                .from(payslip)
-                .save()
-                .then(() => {
-                    downloadPdfBtn.style.display =
-                        "";
-
-                    printBtn.style.display =
-                        "";
-
-                    const message =
-                        document.getElementById(
-                            "downloadMessage"
-                        );
-
-                    if (message) {
-                        message.classList.add(
-                            "show"
-                        );
-
-                        setTimeout(() => {
-                            message.classList.remove(
-                                "show"
-                            );
-                        }, 3000);
-                    }
-                })
-                .catch(() => {
-                    downloadPdfBtn.style.display =
-                        "";
-
-                    printBtn.style.display =
-                        "";
-
-                    alert(
-                        "Unable to generate PDF."
-                    );
-                });
+    downloadPdfBtn.addEventListener("click", () => {
+        if (
+            payslip.classList.contains("hidden")
+        ) {
+            alert("Please generate a payslip first.");
+            return;
         }
-    );
+
+        downloadPdfBtn.style.display = "none";
+        printBtn.style.display = "none";
+
+        const options = {
+            margin: 5,
+            filename:
+                `${empName.textContent}-Payslip.pdf`,
+            image: {
+                type: "jpeg",
+                quality: 1
+            },
+            html2canvas: {
+                scale: 1.5,
+                scrollY: 0,
+                useCORS: true
+            },
+            jsPDF: {
+                unit: "mm",
+                format: "a4",
+                orientation: "portrait"
+            }
+        };
+
+        html2pdf()
+            .set(options)
+            .from(payslip)
+            .save()
+            .then(() => {
+                downloadPdfBtn.style.display = "";
+                printBtn.style.display = "";
+
+                const message =
+                    document.getElementById(
+                        "downloadMessage"
+                    );
+
+                if (message) {
+                    message.classList.add("show");
+
+                    setTimeout(() => {
+                        message.classList.remove("show");
+                    }, 3000);
+                }
+            })
+            .catch(() => {
+                downloadPdfBtn.style.display = "";
+                printBtn.style.display = "";
+
+                alert("Unable to generate PDF.");
+            });
+    });
 }
 
 if (printBtn) {
@@ -910,13 +755,14 @@ if (printBtn) {
 }
 
 function logout() {
-    window.location.href =
-        "index.html";
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userEmail");
+    window.location.href = "index.html";
 }
 
 function displayCurrentDate() {
-    const today =
-        new Date();
+    const today = new Date();
 
     const options = {
         weekday: "long",
@@ -926,9 +772,7 @@ function displayCurrentDate() {
     };
 
     const dateElement =
-        document.getElementById(
-            "currentDate"
-        );
+        document.getElementById("currentDate");
 
     if (dateElement) {
         dateElement.textContent =
@@ -941,112 +785,68 @@ function displayCurrentDate() {
 
 function loadSavedPayslip() {
     const savedPayslip =
-        localStorage.getItem(
-            "lastPayslip"
-        );
+        localStorage.getItem("lastPayslip");
 
-    if (!savedPayslip) {
-        return;
-    }
+    if (!savedPayslip) return;
 
     try {
-        const data =
-            JSON.parse(
-                savedPayslip
-            );
+        const data = JSON.parse(savedPayslip);
 
-        if (empName) {
-            empName.textContent =
-                data.name;
-        }
-
-        if (empDept) {
-            empDept.textContent =
-                data.department;
-        }
-
-        if (empPosition) {
-            empPosition.textContent =
-                data.position;
-        }
+        if (empName) empName.textContent = data.name;
+        if (empDept) empDept.textContent = data.department;
+        if (empPosition) empPosition.textContent = data.position;
 
         if (empHours) {
-            empHours.textContent =
-                data.hours + " hrs";
+            empHours.textContent = data.hours + " hrs";
         }
 
         if (salary) {
-            salary.textContent =
-                formatCurrency(
-                    data.salary
-                );
+            salary.textContent = formatCurrency(data.salary);
         }
 
         if (annualSalary) {
             annualSalary.textContent =
-                formatCurrency(
-                    data.annualSalary
-                );
+                formatCurrency(data.annualSalary);
         }
 
         if (overtime) {
             overtime.textContent =
-                formatCurrency(
-                    data.overtime
-                );
+                formatCurrency(data.overtime);
         }
 
         if (bonus) {
             bonus.textContent =
-                formatCurrency(
-                    data.bonus
-                );
+                formatCurrency(data.bonus);
         }
 
         if (gross) {
             gross.textContent =
-                formatCurrency(
-                    data.gross
-                );
+                formatCurrency(data.gross);
         }
 
         if (tax) {
             tax.textContent =
-                "-" +
-                formatCurrency(
-                    data.tax
-                );
+                "-" + formatCurrency(data.tax);
         }
 
         if (pension) {
             pension.textContent =
-                "-" +
-                formatCurrency(
-                    data.pension
-                );
+                "-" + formatCurrency(data.pension);
         }
 
         if (medicalAid) {
             medicalAid.textContent =
-                "-" +
-                formatCurrency(
-                    data.medicalAid
-                );
+                "-" + formatCurrency(data.medicalAid);
         }
 
         if (totalDeductions) {
             totalDeductions.textContent =
-                "-" +
-                formatCurrency(
-                    data.deductions
-                );
+                "-" + formatCurrency(data.deductions);
         }
 
         if (netPay) {
             netPay.textContent =
-                formatCurrency(
-                    data.netPay
-                );
+                formatCurrency(data.netPay);
         }
 
         if (employeeCode) {
@@ -1058,15 +858,11 @@ function loadSavedPayslip() {
         }
 
         if (emptyState) {
-            emptyState.classList.add(
-                "hidden"
-            );
+            emptyState.classList.add("hidden");
         }
 
         if (payslip) {
-            payslip.classList.remove(
-                "hidden"
-            );
+            payslip.classList.remove("hidden");
         }
 
     } catch (error) {
@@ -1083,31 +879,3 @@ window.addEventListener("DOMContentLoaded", () => {
     displayCurrentDate();
     loadSavedPayslip();
 });
-
-async function loadAllEmployees() {
-    try {
-        const response = await fetch("http://127.0.0.1:2020/employees");
-
-        if (!response.ok) {
-            throw new Error("Failed to load employees");
-        }
-
-        const result = await response.json();
-
-        const employees = result.data || result;
-
-        employeeInformation = employees.map(employee => ({
-            employeeId: employee.employee_id,
-            name: employee.name,
-            position: employee.position,
-            department: employee.department,
-            salary: Number(employee.salary || 0)
-        }));
-
-        loadEmployees();
-        loadPayrollEmployees();
-
-    } catch (error) {
-        console.error("Failed to load employees:", error);
-    }
-}
