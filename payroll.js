@@ -1,4 +1,4 @@
-const API_URL = "https://modern-tech-back.onrender.com";
+const API_URL = "https://modern-tech-back.onrender.com/payroll";
 
 const employeeSelect = document.getElementById("employee");
 const generateBtn = document.getElementById("generateBtn");
@@ -128,7 +128,7 @@ async function loadPayrollData() {
         console.error("Failed to load payroll:", error);
 
         alert(
-            "Could not connect to the payroll server on port 2020."
+            "Could not load payroll records. Please try again."
         );
     }
 }
@@ -1089,18 +1089,21 @@ async function loadAllEmployees() {
         const response = await fetch("https://modern-tech-back.onrender.com/employees");
 
         if (!response.ok) {
-            throw new Error("Failed to load employees");
+            const text = await response.text();
+            throw new Error(`Failed ${response.status}: ${text}`);
         }
 
         const result = await response.json();
 
-        const employees = result.data || result;
+        const list = result.data || result;
 
-        employeeInformation = employees.map(employee => ({
+        console.log("Loaded from DB:", list);
+
+        employeeInformation = list.map(employee => ({
             employeeId: employee.employee_id,
             name: employee.name,
-            position: employee.position,
             department: employee.department,
+            position: employee.position,
             salary: Number(employee.salary || 0)
         }));
 
