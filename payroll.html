@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ModernTech Solutions | Payroll Management</title>
+<meta name="description" content="ModernTech Solutions HR Payroll Management System" />
+<link rel="stylesheet" href="payroll.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+</head>
+
+<body>
+
+<button class="menu-btn" onclick="toggleMenu()">
+<i class="fa-solid fa-bars"></i>
+</button>
+
+<div class="container">
+
+<aside class="sidebar">
+
+<div class="logo">
+<div class="logo-icon">
+<i class="fa-solid fa-building"></i>
+</div>
+
+<div>
+<h2>ModernTech</h2>
+<span>HR Management</span>
+</div>
+</div>
+
+<nav>
+
+<a href="employees.html">
+<i class="fa-solid fa-users"></i>
+<span>Employees Data</span>
+</a>
+
+<a href="payroll.html" class="active">
+<i class="fa-solid fa-money-check-dollar"></i>
+<span>Payroll</span>
+</a>
+
+<a href="leave.html">
+<i class="fa-solid fa-calendar-days"></i>
+<span>Time Off/Attendance</span>
+</a>
+
+<a href="performance.html">
+<i class="fa-solid fa-chart-line"></i>
+<span>Performance</span>
+</a>
+
+<a href="index.html" class="logout-link-mobile-nav">
+<i class="fa-solid fa-sign-out-alt"></i>
+<span>Logout</span>
+</a>
+
+</nav>
+
+<div class="sidebar-footer">
+
+<div class="avatar">
+AU
+</div>
+
+<div>
+<h4>Admin User</h4>
+<p>HR Administrator</p>
+</div>
+
+<button class="logout-btn" onclick="logout()" title="Logout">
+<i class="fa-solid fa-sign-out-alt"></i>
+</button>
+
+</div>
+
+</aside>
+
+<main class="main-content">
+
+<div class="top-navbar">
+
+<div class="breadcrumb">
+<span>ModernTech</span>
+<span>/</span>
+<span>Payroll</span>
+</div>
+
+<div class="admin-section">
+<div class="admin-date" id="currentDate"></div>
+</div>
+
+</div>
+
+<header>
+<div>
+<h1>Payroll Management</h1>
+<span>Generate digital payslips and automate payroll calculations</span>
+</div>
+</header>
+
+<section class="content">
+
+<div class="left-column">
+
+<div class="card">
+
+<h2>
+<i class="fa-solid fa-money-check-dollar"></i>
+Pay Run
+</h2>
+
+<label for="employee">
+Select Employee
+</label>
+
+<select id="employee" required>
+<option value="" disabled selected>Select Employee</option>
+</select>
+
+<label for="period">
+Pay Period
+</label>
+
+<input type="month" id="period" value="2026-07" />
+
+<button id="generateBtn">
+<i class="fa-solid fa-file-invoice-dollar"></i>
+Generate Payslip
+</button>
+
+</div>
+
+<div class="card summary">
+
+<h3>
+<i class="fa-solid fa-chart-column"></i>
+Company Summary
+</h3>
+
+<div class="summary-item">
+<span>Active Employees</span>
+<strong id="activeEmployees">0</strong>
+</div>
+
+<div class="summary-item">
+<span>Total Payroll</span>
+<strong id="totalPayroll">R0</strong>
+</div>
+
+<div class="summary-item">
+<span>Average Salary</span>
+<strong id="averageSalary">R0</strong>
+</div>
+
+<div class="summary-item">
+<span>Total Annual Payroll</span>
+<strong id="annualPayroll">R0</strong>
+</div>
+
+</div>
+
+</div>
+
+<div class="right-column">
+
+<div id="emptyState" class="empty-state">
+
+<div>
+<i class="fa-solid fa-file-invoice-dollar fa-3x"></i>
+
+<h2>
+No Payslip Available
+</h2>
+
+<p>
+Select an employee and generate a payslip to view payroll information.
+</p>
+
+</div>
+
+</div>
+
+<div id="payslip" class="payslip hidden">
+
+<div class="payslip-header">
+
+<div>
+
+<span>
+OFFICIAL DIGITAL PAYSLIP
+</span>
+
+<h2>
+ModernTech Solutions
+</h2>
+
+<p id="payPeriod">
+Pay Period: July 2026
+</p>
+
+</div>
+
+<h1 id="employeeCode">
+E001
+</h1>
+
+</div>
+
+<div class="employee-info">
+
+<div>
+<small>Employee</small>
+<h4 id="empName"></h4>
+</div>
+
+<div>
+<small>Department</small>
+<h4 id="empDept"></h4>
+</div>
+
+<div>
+<small>Position</small>
+<h4 id="empPosition"></h4>
+</div>
+
+<div>
+<small>Hours Worked</small>
+<h4 id="empHours"></h4>
+</div>
+
+<div>
+<small>Annual Salary</small>
+<h4 id="annualSalary">R0</h4>
+</div>
+
+</div>
+
+<div class="salary-section">
+
+<div class="earnings">
+
+<h3>
+Earnings
+</h3>
+
+<div class="row">
+<span>Basic Salary</span>
+<strong id="salary">R0</strong>
+</div>
+
+<div class="row">
+<span>Overtime</span>
+<strong id="overtime">R0</strong>
+</div>
+
+<div class="row">
+<span>Bonus</span>
+<strong id="bonus">R0</strong>
+</div>
+
+<div class="row total">
+<span>Gross Pay</span>
+<strong id="gross">R0</strong>
+</div>
+
+</div>
+
+<div class="deductions">
+
+<h3>
+Deductions
+</h3>
+
+<div class="row">
+<span>PAYE Tax (18%)</span>
+<strong id="tax">R0</strong>
+</div>
+
+<div class="row">
+<span>Pension (5%)</span>
+<strong id="pension">R0</strong>
+</div>
+
+<div class="row">
+<span>Medical Aid</span>
+<strong id="medicalAid">R0</strong>
+</div>
+
+<div class="row total">
+<span>Total Deductions</span>
+<strong id="totalDeductions">R0</strong>
+</div>
+
+</div>
+
+</div>
+
+<div class="net-pay">
+
+<span>
+TOTAL NET PAY
+</span>
+
+<h1 id="netPay">
+R0
+</h1>
+
+</div>
+
+<div class="payslip-footer">
+
+<p>
+This is a computer-generated payslip and does not require a signature.
+</p>
+
+</div>
+
+<button id="downloadPdfBtn" class="pdf-btn">
+<i class="fa-solid fa-download"></i>
+Download PDF
+</button>
+
+<div id="downloadMessage" class="download-message">
+✓ Payslip downloaded successfully
+</div>
+
+<button id="printBtn" class="print-btn">
+<i class="fa-solid fa-print"></i>
+Print Payslip
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="card payroll-records-section">
+
+<div class="records-header">
+
+<button id="payrollRecordsToggle" class="records-toggle" type="button">
+
+<span>
+<i class="fa-solid fa-table"></i>
+Payroll Records
+</span>
+
+<i id="recordsArrow" class="fa-solid fa-chevron-down"></i>
+
+</button>
+
+<button id="addPayrollBtn" class="add-payroll-btn" type="button">
+<i class="fa-solid fa-plus"></i>
+Add Payroll
+</button>
+
+</div>
+
+<div id="payrollRecordsContent" class="hidden">
+
+<div id="payrollForm" class="hidden">
+
+<h3 id="formTitle">
+Add Payroll
+</h3>
+
+<label for="payrollEmployee">
+Select Employee
+</label>
+
+<select id="payrollEmployee">
+<option value="" disabled selected>Select Employee</option>
+</select>
+
+<label for="hoursWorked">
+Hours Worked
+</label>
+
+<input type="number" id="hoursWorked" min="0" placeholder="Enter hours worked" />
+
+<label for="leaveDeductions">
+Leave Deductions
+</label>
+
+<input type="number" id="leaveDeductions" min="0" placeholder="Enter leave deductions" />
+
+<button id="savePayrollBtn" type="button">
+<i class="fa-solid fa-save"></i>
+Save Payroll
+</button>
+
+<button id="cancelPayrollBtn" type="button">
+<i class="fa-solid fa-xmark"></i>
+Cancel
+</button>
+
+</div>
+
+<div style="overflow-x:auto;margin-top:20px;">
+
+<table style="width:100%;border-collapse:collapse;">
+
+<thead>
+
+<tr style="text-align:left;border-bottom:2px solid #e2e8f0;">
+
+<th style="padding:12px;">Employee</th>
+<th style="padding:12px;">Hours</th>
+<th style="padding:12px;">Final Salary</th>
+<th style="padding:12px;">Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="payrollTableBody">
+
+<tr>
+<td colspan="4" style="padding:20px;text-align:center;">
+Loading payroll records...
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="payroll.js"></script>
+
+<script>
+
+function toggleMenu(){
+    document.querySelector(".sidebar").classList.toggle("show");
+}
+
+const options = {
+    weekday:"long",
+    year:"numeric",
+    month:"long",
+    day:"numeric"
+};
+
+document.getElementById("currentDate").textContent =
+new Date().toLocaleDateString("en-ZA", options);
+
+</script>
+
+</body>
+</html>
