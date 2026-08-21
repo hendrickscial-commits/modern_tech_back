@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:2020";
+const API_BASE_URL = "https://modern-tech-back.onrender.com";
 
 const data = {
   attendanceAndLeave: [],

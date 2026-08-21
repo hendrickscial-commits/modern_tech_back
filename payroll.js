@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:2020/payroll";
+const API_URL = "https://modern-tech-back.onrender.com";
 
 const employeeSelect = document.getElementById("employee");
 const generateBtn = document.getElementById("generateBtn");

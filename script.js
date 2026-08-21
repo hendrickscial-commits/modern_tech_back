@@ -6,7 +6,7 @@ if (!localStorage.getItem("isLoggedIn")) {
   window.location.href = "./index.html";
 }
 
-const API_BASE_URL = "http://localhost:2020";
+const API_BASE_URL = "https://modern-tech-back.onrender.com";
 
 function getAuthHeaders() {
   const token = localStorage.getItem("authToken");
