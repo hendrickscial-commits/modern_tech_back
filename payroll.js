@@ -1086,7 +1086,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 async function loadAllEmployees() {
     try {
-        const response = await fetch(API_URL/employees);
+        const response = await fetch(https://modern-tech-back.onrender.com/employees);
 
         if (!response.ok) {
             throw new Error("Failed to load employees");
