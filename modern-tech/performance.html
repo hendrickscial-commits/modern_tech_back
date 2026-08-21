@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Performance Management | ModernTech Solutions</title>
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet"
+        href="performance.css">
+
+</head>
+
+<body>
+    <!-- MAIN CONTAINER -->
+<div class="container">
+
+       <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+
+                <div>
+                    <h2>ModernTech</h2>
+                    <span>HR Management</span>
+                    </div>
+                </div>
+
+            <nav>
+                <a href="employees.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Employees Data</span>
+                </a>
+
+                <a href="payroll.html">
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <span>Payroll</span>
+                </a>
+
+                <a href="leave.html">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Time Off/Attendance</span>
+                </a>
+
+                <a href="performance.html" class="active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Performance</span>
+                </a>
+
+                <a href="index.html" class="logout-link-mobile-nav">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="avatar">AU</div>
+
+                <div>
+                    <h4>Admin User</h4>
+                    <p>HR Administrator</p>
+                </div>
+
+                <button class="logout-btn" title="Logout" type="button">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+    <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+       <!-- TOP NAVBAR -->
+            <header class="topbar">
+
+                <button
+                    type="button"
+                    id="menuToggle"
+                    class="menu-toggle">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <div class="page-title">
+
+                    <h1>Performance Dashboard</h1>
+
+                    <p>ModernTech Solutions</p>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="today">
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <span id="currentDate"></span>
+
+                    </div>
+
+                    <button class="notification-btn" id="notificationBtn" type="button">
+
+                        <i class="fa-regular fa-bell"></i>
+
+                        <span class="notification-count">
+                            3
+                        </span>
+
+                    </button>
+                </div>
+
+            </header>
+
+            <!--=========================================
+                        PAGE HEADER
+            ==========================================-->
+
+            <section class="page-header">
+
+                <div>
+
+                    <h2>
+
+                        Employee Performance Management
+
+                    </h2>
+
+                    <p>
+
+                        Monitor employee productivity, attendance,
+                        performance ratings and manager reviews.
+
+                    </p>
+
+                </div>
+
+                <button class="add-employee" id="addEmployee" type="button">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Add Employee
+
+                </button>
+
+            </section>
+
+    <!-- STATISTICS -->
+            <section class="statistics">
+
+                <div class="stat-card total">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3 id="totalEmployees">
+
+                            10
+
+                        </h3>
+
+                        <p>Total Employees</p>
+
+                    </div>
+
+                </div>
+
+                <div class="stat-card excellent">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-award"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3 id="excellentCount">
+                            0
+                        </h3>
+
+                        <p>Excellent</p>
+
+                    </div>
+
+                </div>
+
+                <div class="stat-card good">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-thumbs-up"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3 id="goodCount">
+                            0
+                        </h3>
+
+                        <p>Good</p>
+
+                    </div>
+
+                </div>
+
+                <div class="stat-card average">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-chart-simple"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3 id="averageCount">
+                            0
+                        </h3>
+                        <p>Average</p>
+
+                    </div>
+
+                </div>
+
+                <div class="stat-card improvement">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3 id="improvementCount">
+                            0
+                        </h3>
+                        <p>Needs Improvement</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!--=========================================
+                        SEARCH BAR
+            ==========================================-->
+
+            <section class="search-section">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search employee by name, department, position or ID...">
+
+                </div>
+
+            </section>
+
+                        <!--=========================================
+                    PERFORMANCE DASHBOARD
+            ==========================================-->
+
+            <section class="dashboard">
+
+                <!--==============================
+                        EMPLOYEE SECTION
+                ===============================-->
+
+                <section class="employee-section">
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <h2>
+
+                                Employee Performance Records
+
+                            </h2>
+
+                            <p>
+
+                                Review, edit and manage employee
+                                performance records.
+
+                            </p>
+
+                        </div>
+
+                        <div class="section-actions">
+
+                            <button type="button" id="refreshEmployees">
+
+                                <i class="fa-solid fa-rotate"></i>
+
+                                Refresh
+
+                            </button>
+
+                            <button type="button" id="sortEmployees">
+
+                                <i class="fa-solid fa-arrow-down-a-z"></i>
+
+                                Sort
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Employee Cards Generated by JavaScript -->
+
+                    <div >
+                        <div id="employeeContainer" class="employee-container"></div>
+                    </div>
+
+                    <!-- Empty Search State -->
+
+                    <div
+                        id="emptyState"
+                        class="empty-state">
+
+                        <i class="fa-solid fa-user-slash"></i>
+
+                        <h3>
+
+                            No Employees Found
+
+                        </h3>
+
+                        <p>
+
+                            Try searching with another employee name,
+                            department or ID.
+
+                        </p>
+
+                    </div>
+
+                </section>
+
+                <!--==============================
+                        DETAILS PANEL
+                ===============================-->
+
+                <aside
+                    id="detailsPanel"
+                    class="details-panel">
+
+                    <div class="details-header">
+
+                        <div>
+
+                            <h2>
+
+                                Employee Details
+
+                            </h2>
+
+                            <p>
+
+                                Performance Information
+
+                            </p>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            id="closePanel">
+
+                            <i class="fa-solid fa-xmark"></i>
+
+                        </button>
+
+                    </div>
+
+                    <div class="details-body">
+
+                        <!-- Employee Image -->
+
+                        <div class="profile-image">
+
+                            <img
+                                id="detailImage"
+                                src="images/employee1.jpg"
+                                alt="Employee">
+
+                        </div>
+
+                        <!-- Name -->
+
+                        <h2
+                            id="detailName">
+
+                            Select Employee
+
+                        </h2>
+
+                        <!-- Position -->
+
+                        <p
+                            id="detailPosition">
+
+                            Position
+
+                        </p>
+
+                        <!-- Performance Badge -->
+
+                        <span
+                            id="detailBadge"
+                            class="performance-badge excellent">
+
+                            Excellent
+
+                        </span>
+
+                        <!--=========================
+                                INFORMATION GRID
+                        =========================-->
+
+                        <div class="information-grid">
+
+                            <div class="info-card">
+
+                                <span>
+
+                                    Employee ID
+
+                                </span>
+
+                                <h4 id="detailID">
+
+                                    EMP001
+
+                                </h4>
+
+                            </div>
+
+                            <div class="info-card">
+
+                                <span>
+
+                                    Department
+
+                                </span>
+
+                                <h4 id="detailDepartment">
+
+                                    Software Development
+
+                                </h4>
+
+                            </div>
+
+                            <div class="info-card">
+
+                                <span>
+
+                                    Attendance
+
+                                </span>
+
+                                <h4 id="detailAttendance">
+
+                                    98%
+
+                                </h4>
+
+                            </div>
+
+                            <div class="info-card">
+
+                                <span>
+
+                                    Performance Score
+
+                                </span>
+
+                                <h4 id="detailScore">
+
+                                    95
+
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                        <!--=========================
+                                MANAGER COMMENTS
+                        =========================-->
+
+                        <div class="manager-comments">
+
+                            <h3>
+
+                                Manager Comments
+
+                            </h3>
+
+                            <textarea
+                                id="detailComment"
+                                rows="5"
+                                readonly>
+
+                                Select an employee to view comments.
+
+                            </textarea>
+
+                        </div>
+
+                        <!--=========================
+                                ACTION BUTTONS
+                        =========================-->
+
+                        <div class="detail-buttons">
+
+                            <button
+                                type="button"
+                                id="editBtn"
+                                class="edit-btn">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                                Edit
+
+                            </button>
+
+                            <button
+                                type="button"
+                                id="saveBtn"
+                                class="save-btn">
+
+                                <i class="fa-solid fa-floppy-disk"></i>
+
+                                Save
+
+                            </button>
+
+                            <button
+                                type="button"
+                                id="cancelBtn"
+                                class="cancel-btn">
+
+                                <i class="fa-solid fa-ban"></i>
+
+                                Cancel
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </section>
+
+            <!--=========================================
+                    LOADING OVERLAY
+            ==========================================-->
+
+            <div
+                id="loadingOverlay"
+                class="loading-overlay">
+
+                <div class="loader"></div>
+
+                <h3>
+
+                    Loading Employee Data...
+
+                </h3>
+
+            </div>
+
+            <!--=========================================
+                    DELETE CONFIRMATION MODAL
+            ==========================================-->
+
+            <div
+                id="confirmationModal"
+                class="modal">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <i class="fa-solid fa-circle-question"></i>
+
+                        <h2>
+
+                            Confirm Action
+
+                        </h2>
+
+                    </div>
+
+                    <p id="modalMessage">
+
+                        Are you sure you want to continue?
+
+                    </p>
+
+                    <div class="modal-buttons">
+
+                        <button
+                            id="confirmYes">
+
+                            Yes
+
+                        </button>
+
+                        <button
+                            id="confirmNo">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+                        <!--=========================================
+                    SCROLL TO TOP BUTTON
+            ==========================================-->
+
+            <button
+                type="button"
+                id="scrollTopBtn"
+                class="scroll-top-btn"
+                aria-label="Scroll to top">
+
+                <i class="fa-solid fa-arrow-up"></i>
+
+            </button>
+
+            <!--=========================================
+                    TOAST NOTIFICATIONS
+            ==========================================-->
+
+            <div
+                id="toastContainer"
+                class="toast-container">
+
+                <!-- Toast messages will be generated dynamically -->
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!--=========================================
+                FOOTER
+    ==========================================-->
+
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <div class="footer-left">
+
+                <img
+                    src="images/logo.png"
+                    alt="ModernTech Logo">
+
+                <div>
+
+                    <h3>
+
+                        ModernTech Solutions
+
+                    </h3>
+
+                    <p>
+
+                        Employee Performance Management System
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="footer-center">
+
+                <p>
+
+                    © 2026 ModernTech Solutions.
+
+                </p>
+
+                <p>
+
+                    All Rights Reserved.
+
+                </p>
+
+            </div>
+
+            <div class="footer-right">
+
+                <a aria-label="Facebook">
+
+                    <i class="fa-brands fa-facebook-f"></i>
+
+                </a>
+
+                <a aria-label="Twitter">
+
+                    <i class="fa-brands fa-x-twitter"></i>
+
+                </a>
+
+                <a href="" aria-label="LinkedIn">
+
+                    <i class="fa-brands fa-linkedin-in"></i>
+
+                </a>
+
+                <a href="#" aria-label="GitHub">
+
+                    <i class="fa-brands fa-github"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!--=========================================
+                JAVASCRIPT
+    ==========================================-->
+
+    <script src="performance.js"></script>
+
+</body>
+
+</html>

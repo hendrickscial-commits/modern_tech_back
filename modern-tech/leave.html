@@ -1,0 +1,1740 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ModernTech - Time Off & Attendance</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      :root {
+        --black: #0a0a0a;
+        --gray-50: #fafafa;
+        --gray-100: #f4f4f5;
+        --gray-200: #e4e4e7;
+        --gray-300: #d4d4d8;
+        --gray-400: #a1a1aa;
+        --gray-500: #71717a;
+        --gray-600: #52525b;
+        --gray-700: #3f3f46;
+        --gray-900: #18181b;
+        --green: #10b981;
+        --green-bg: #d1fae5;
+        --red: #ef4444;
+        --red-bg: #fee2e2;
+        --amber: #f59e0b;
+        --amber-bg: #fef3c7;
+        --blue: #3b82f6;
+        --blue-bg: #dbeafe;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow:
+          0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+        --shadow-md:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --radius: 12px;
+        --radius-sm: 8px;
+        --sidebar-bg: #0a2f3f;
+        --sidebar-hover: #134a61;
+        --sidebar-text: #e6f2f8;
+        --sidebar-muted: #b8d6e6;
+        --accent: #38bdf8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter",
+          sans-serif;
+        background: var(--gray-50);
+        color: var(--gray-900);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app-container {
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Sidebar Navbar */
+      .sidebar {
+        width: 260px;
+        background: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+
+      .logo {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .logo-icon {
+        font-size: 22px;
+        color: var(--accent);
+      }
+
+      .logo h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .logo span {
+        font-size: 0.75rem;
+        color: var(--sidebar-muted);
+        display: block;
+      }
+
+      .sidebar nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .sidebar nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px;
+        color: var(--sidebar-muted);
+        text-decoration: none;
+        border-radius: 10px;
+        transition: 0.2s;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+
+      .sidebar nav a:hover,
+      .sidebar nav a.active {
+        background: var(--sidebar-hover);
+        color: #ffffff;
+      }
+
+      .sidebar-footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: auto;
+        font-size: 14px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.875rem;
+        color: var(--sidebar-bg);
+      }
+
+      .sidebar-footer h4 {
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .sidebar-footer p {
+        font-size: 0.75rem;
+        color: var(--sidebar-muted);
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      /* Top Bar */
+      .top-bar {
+        background: white;
+        border-bottom: 1px solid var(--gray-200);
+        padding: 12px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        color: var(--gray-500);
+      }
+
+      .breadcrumb-separator {
+        color: var(--gray-400);
+      }
+
+      .date-display {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+        font-weight: 500;
+      }
+
+      .date-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: white;
+        border: 1px solid var(--gray-200);
+        border-radius: 999px;
+        padding: 7px 12px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .date-selector label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--gray-500);
+      }
+
+      .date-selector input {
+        border: none;
+        background: transparent;
+        color: var(--gray-900);
+        font-size: 0.875rem;
+        font-weight: 600;
+        outline: none;
+        cursor: pointer;
+        min-width: 130px;
+      }
+
+      .date-selector input::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        filter: invert(0.35);
+      }
+
+      .main-header {
+        background: white;
+        padding: 24px;
+        border-bottom: 1px solid var(--gray-200);
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .header-text h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--black);
+        margin-bottom: 4px;
+        letter-spacing: -0.025em;
+      }
+
+      .header-text p {
+        font-size: 0.9375rem;
+        color: var(--gray-500);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: var(--sidebar-bg);
+        border: none;
+        padding: 10px 20px;
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      .btn-primary:hover {
+        background: var(--sidebar-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: white;
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 15, 24, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 1000;
+      }
+
+      .modal {
+        width: min(100%, 560px);
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--gray-200);
+      }
+
+      .modal-header h3 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--gray-900);
+      }
+
+      .modal-close {
+        border: none;
+        background: transparent;
+        color: var(--gray-500);
+        font-size: 1.125rem;
+        cursor: pointer;
+      }
+
+      .modal-close:hover {
+        color: var(--gray-700);
+      }
+
+      .modal-body {
+        padding: 20px 24px 24px;
+      }
+
+      .form-group {
+        margin-bottom: 14px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 6px;
+      }
+
+      .form-control {
+        width: 100%;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        font-size: 0.875rem;
+        color: var(--gray-900);
+        background: white;
+        outline: none;
+      }
+
+      .form-control:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 18px;
+      }
+
+      .btn-secondary {
+        background: white;
+        color: var(--gray-700);
+        border: 1px solid var(--gray-300);
+        padding: 10px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-secondary:hover {
+        background: var(--gray-50);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* Summary Cards */
+      .content-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+        width: 100%;
+        flex: 1;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .summary-card {
+        background: white;
+        padding: 20px;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray-200);
+        transition: all 0.2s ease;
+      }
+
+      .summary-card:hover {
+        box-shadow: var(--shadow-md);
+        border-color: var(--gray-300);
+      }
+
+      .summary-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-500);
+        margin-bottom: 12px;
+      }
+
+      .summary-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--sidebar-bg);
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .summary-subtext {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+      }
+
+      /* Dashboard Layout */
+      .dashboard-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      /* Employee Sidebar */
+      .employee-sidebar {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+      }
+
+      .employee-sidebar-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+      }
+
+      .employee-sidebar-header h3 {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-500);
+      }
+
+      .employee-list {
+        max-height: 600px;
+        overflow-y: auto;
+      }
+
+      .employee-item {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--gray-100);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .employee-item:last-child {
+        border-bottom: none;
+      }
+
+      .employee-item:hover {
+        background: var(--gray-50);
+      }
+
+      .employee-item.active {
+        background: #e6f2f8;
+        border-left: 3px solid var(--accent);
+        padding-left: 17px;
+      }
+
+      .employee-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .employee-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .employee-stat {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 24px;
+        padding: 0 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1;
+      }
+
+      .badge-pending {
+        background: var(--amber-bg);
+        color: var(--amber);
+      }
+
+      /* Main Panel */
+      .main-panel {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+      }
+
+      .panel-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .panel-employee-info h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--black);
+        margin-bottom: 4px;
+      }
+
+      .panel-employee-stats {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.8125rem;
+        color: var(--gray-600);
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .stat-value {
+        font-weight: 600;
+        color: var(--gray-900);
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+      }
+
+      .tab {
+        padding: 12px 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-500);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+      }
+
+      .tab:hover {
+        color: var(--gray-900);
+        background: white;
+      }
+
+      .tab.active {
+        color: var(--sidebar-bg);
+        border-bottom-color: var(--accent);
+        background: white;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 0;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Tables */
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: var(--gray-50);
+        border-bottom: 1px solid var(--gray-200);
+      }
+
+      th {
+        padding: 12px 24px;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-500);
+      }
+
+      td {
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--gray-100);
+        font-size: 0.875rem;
+        color: var(--gray-900);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      tbody tr:hover {
+        background: var(--gray-50);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+
+      .status-present {
+        background: var(--accent);
+        color: var(--sidebar-bg);
+      }
+
+      .status-leave {
+        background: var(--gray-200);
+        color: var(--gray-700);
+      }
+
+      .status-approved {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+
+      .status-pending {
+        background: var(--amber-bg);
+        color: var(--amber);
+      }
+
+      .status-denied {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+
+      .request-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn-action {
+        border: none;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn-approve {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+
+      .btn-approve:hover {
+        background: var(--green);
+        color: white;
+      }
+
+      .btn-deny {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+
+      .btn-deny:hover {
+        background: var(--red);
+        color: white;
+      }
+
+      .logout-btn {
+        margin-left: auto;
+        background: none;
+        border: none;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 16px;
+        transition: color 0.2s;
+        padding: 4px 8px;
+        flex-shrink: 0;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logout-btn:hover {
+        color: #ffffff;
+      }
+
+      .logout-link-mobile {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        color: var(--gray-700);
+        text-decoration: none;
+        font-size: 0.8125rem;
+        font-weight: 600;
+      }
+
+      .logout-link-mobile:hover {
+        background: var(--gray-100);
+        color: var(--gray-900);
+      }
+
+      .logout-link-mobile-nav {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--sidebar-muted);
+        text-decoration: none;
+        font-size: 0.8125rem;
+        font-weight: 600;
+      }
+
+      @media (min-width: 769px) {
+        .logout-link-mobile-nav {
+          display: none !important;
+        }
+      }
+
+      .logout-link-mobile-nav:hover {
+        background: #ffffff;
+        color: var(--sidebar-bg);
+      }
+
+      .top-navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .breadcrumb span:first-child {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .admin-section {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .admin-date {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .dashboard-layout {
+          grid-template-columns: 280px 1fr;
+          gap: 16px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .app-container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          padding: 15px;
+        }
+
+        .logo {
+          margin-bottom: 15px;
+        }
+
+        .sidebar nav {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .sidebar nav a {
+          flex: 1 1 160px;
+          justify-content: center;
+        }
+
+        .logout-link-mobile-nav {
+          display: inline-flex;
+          flex: 1 1 160px;
+        }
+
+        .sidebar-footer {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .sidebar {
+          padding: 10px;
+        }
+
+        .logo {
+          justify-content: center;
+          margin-bottom: 12px;
+        }
+
+        .logo h2 {
+          font-size: 20px;
+        }
+
+        .logo span {
+          font-size: 12px;
+        }
+
+        .logo-icon {
+          font-size: 20px;
+        }
+
+        .sidebar nav {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 6px;
+          width: 100%;
+        }
+
+        .sidebar nav a {
+          flex: none;
+          justify-content: center;
+          align-items: center;
+          padding: 10px 4px;
+          font-size: 11px;
+          text-align: center;
+        }
+
+        .sidebar nav a i {
+          display: block;
+          font-size: 18px;
+          margin-bottom: 4px;
+        }
+
+        .logout-link-mobile-nav {
+          padding: 10px 4px;
+          font-size: 11px;
+        }
+      }
+
+      /* Scrollbar */
+      .employee-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .employee-list::-webkit-scrollbar-track {
+        background: var(--gray-100);
+      }
+
+      .employee-list::-webkit-scrollbar-thumb {
+        background: var(--gray-300);
+        border-radius: 3px;
+      }
+
+      .employee-list::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-400);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-building"></i>
+          </div>
+          <div>
+            <h2>ModernTech</h2>
+            <span>HR Management</span>
+          </div>
+        </div>
+
+        <nav>
+          <a href="./employees.html">
+            <i class="fa-solid fa-users"></i>
+            <span>Employees Data</span>
+          </a>
+          <a href="./payroll.html">
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <span>Payroll</span>
+          </a>
+          <a href="#" class="active">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Time Off/Attendance</span>
+          </a>
+          <a href="performance.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Performance</span>
+          </a>
+          <a href="./index.html" class="logout-link-mobile-nav">
+            <i class="fa-solid fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="avatar">AU</div>
+          <div>
+            <h4>Admin User</h4>
+            <p>HR Administrator</p>
+          </div>
+          <a href="./index.html" class="logout-btn" title="Logout">
+            <i class="fa-solid fa-sign-out-alt"></i>
+          </a>
+        </div>
+      </aside>
+
+      <div class="main-content">
+        <div class="top-bar">
+          <div class="breadcrumb">
+            <span>ModernTech</span>
+            <span>/</span>
+            <span>Time Off</span>
+          </div>
+          <div class="admin-section">
+            <a href="./index.html" class="logout-link-mobile" title="Logout">
+              <i class="fa-solid fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+
+            <div class="admin-date" id="currentDate"></div>
+          </div>
+        </div>
+
+        <header class="main-header">
+          <div class="header-content">
+            <div class="header-text">
+              <h1>Time Off & Attendance Tracking</h1>
+              <p>Monitor hours, leave balances, and requests.</p>
+            </div>
+            <div class="date-selector">
+              <label for="daySelector">Date</label>
+              <input type="date" id="daySelector" />
+            </div>
+            <button class="btn-primary" id="newRequestBtn" type="button">
+              <span>+</span>
+              <span>New Request</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+          <div class="summary-grid" id="summaryCards"></div>
+
+          <div class="dashboard-layout">
+            <aside class="employee-sidebar">
+              <div class="employee-sidebar-header">
+                <h3>Select Employee</h3>
+              </div>
+              <div class="employee-list" id="employeeList"></div>
+            </aside>
+
+            <main class="main-panel">
+              <div class="panel-header">
+                <div class="panel-employee-info">
+                  <h2 id="selectedEmployeeName">-</h2>
+                  <div
+                    class="panel-employee-stats"
+                    id="selectedEmployeeStats"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="tabs">
+                <div class="tab active" data-tab="attendance">
+                  Attendance Log
+                </div>
+                <div class="tab" data-tab="leave">Leave Requests</div>
+              </div>
+
+              <div class="tab-content active" id="attendanceTab">
+                <div class="table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="tab-content" id="leaveTab">
+                <div class="table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="leaveTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="requestModal">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="requestModalTitle"
+      >
+        <div class="modal-header">
+          <h3 id="requestModalTitle">New Leave Request</h3>
+          <button
+            class="modal-close"
+            id="closeModal"
+            type="button"
+            aria-label="Close"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="leaveRequestForm">
+            <div class="form-group">
+              <label class="form-label" for="employeeSelect">Employee</label>
+              <select class="form-control" id="employeeSelect" required>
+                <option value="">Select employee</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leaveType">Leave Type</label>
+              <select class="form-control" id="leaveType" required>
+                <option value="">Select type</option>
+                <option value="Annual">Annual Leave</option>
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Personal">Personal Leave</option>
+                <option value="Remote">Remote Work</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="startDate">Start Date</label>
+                <input
+                  class="form-control"
+                  type="date"
+                  id="startDate"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="endDate">End Date</label>
+                <input class="form-control" type="date" id="endDate" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reason">Reason</label>
+              <textarea
+                class="form-control"
+                id="reason"
+                rows="3"
+                required
+                placeholder="Brief description..."
+              ></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button class="btn-secondary" type="button" id="cancelBtn">
+                Cancel
+              </button>
+              <button class="btn-primary" type="submit">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const data = {
+        attendanceAndLeave: [
+          {
+            employeeId: 1,
+            name: "Sibongile Nkosi",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Absent" },
+              { date: "2025-07-27", status: "Present" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2025-07-22", reason: "Sick Leave", status: "Approved" },
+              { date: "2024-12-01", reason: "Personal", status: "Pending" },
+            ],
+          },
+          {
+            employeeId: 2,
+            name: "Lungile Moyo",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Absent" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              {
+                date: "2025-07-15",
+                reason: "Family Responsibility",
+                status: "Denied",
+              },
+              { date: "2024-12-02", reason: "Vacation", status: "Approved" },
+            ],
+          },
+          {
+            employeeId: 3,
+            name: "Thabo Molefe",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Present" },
+              { date: "2025-07-28", status: "Absent" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              {
+                date: "2025-07-10",
+                reason: "Medical Appointment",
+                status: "Approved",
+              },
+              { date: "2024-12-05", reason: "Personal", status: "Pending" },
+            ],
+          },
+          {
+            employeeId: 4,
+            name: "Keshav Naidoo",
+            attendance: [
+              { date: "2025-07-25", status: "Absent" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Present" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2025-07-20", reason: "Bereavement", status: "Approved" },
+            ],
+          },
+          {
+            employeeId: 5,
+            name: "Zanele Khumalo",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Absent" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2024-12-01", reason: "Childcare", status: "Pending" },
+            ],
+          },
+          {
+            employeeId: 6,
+            name: "Sipho Zulu",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Absent" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2025-07-18", reason: "Sick Leave", status: "Approved" },
+            ],
+          },
+          {
+            employeeId: 7,
+            name: "Naledi Moeketsi",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Present" },
+              { date: "2025-07-28", status: "Absent" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2025-07-22", reason: "Vacation", status: "Pending" },
+            ],
+          },
+          {
+            employeeId: 8,
+            name: "Farai Gumbo",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Absent" },
+              { date: "2025-07-27", status: "Present" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              {
+                date: "2024-12-02",
+                reason: "Medical Appointment",
+                status: "Approved",
+              },
+            ],
+          },
+          {
+            employeeId: 9,
+            name: "Karabo Dlamini",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Present" },
+              { date: "2025-07-28", status: "Absent" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2025-07-19", reason: "Childcare", status: "Denied" },
+            ],
+          },
+          {
+            employeeId: 10,
+            name: "Fatima Patel",
+            attendance: [
+              { date: "2025-07-25", status: "Present" },
+              { date: "2025-07-26", status: "Present" },
+              { date: "2025-07-27", status: "Absent" },
+              { date: "2025-07-28", status: "Present" },
+              { date: "2025-07-29", status: "Present" },
+            ],
+            leaveRequests: [
+              { date: "2024-12-03", reason: "Vacation", status: "Pending" },
+            ],
+          },
+        ],
+      };
+
+      const reportDates = [
+        "2025-07-25",
+        "2025-07-26",
+        "2025-07-27",
+        "2025-07-28",
+        "2025-07-29",
+      ];
+      const todayDate = "2025-07-29";
+      let selectedEmployeeId = 1;
+      let activeTab = "attendance";
+      let selectedDay = todayDate;
+      let newRequestBtn;
+      let requestModal;
+      let closeModal;
+      let cancelBtn;
+      let leaveRequestForm;
+      let employeeSelect;
+      let leaveType;
+      let startDate;
+      let endDate;
+      let reason;
+
+      function formatDate(dateStr) {
+        const date = new Date(dateStr + "T00:00:00");
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function calculateAttendancePercent(employee) {
+        const present = employee.attendance.filter(
+          (a) => reportDates.includes(a.date) && a.status === "Present",
+        ).length;
+        return Math.round((present / reportDates.length) * 100);
+      }
+
+      function getPendingCount(employee) {
+        return employee.leaveRequests.filter((req) => req.status === "Pending")
+          .length;
+      }
+
+      function calculateSummary() {
+        const totalEmployees = data.attendanceAndLeave.length;
+        const presentToday = data.attendanceAndLeave.filter((emp) =>
+          emp.attendance.find(
+            (a) => a.date === selectedDay && a.status === "Present",
+          ),
+        ).length;
+        const onLeaveToday = data.attendanceAndLeave.filter((emp) =>
+          emp.attendance.find(
+            (a) => a.date === selectedDay && a.status === "Absent",
+          ),
+        ).length;
+        const remote = 0;
+        const pendingReqs = data.attendanceAndLeave.reduce(
+          (sum, emp) => sum + getPendingCount(emp),
+          0,
+        );
+
+        return {
+          totalEmployees,
+          presentToday,
+          onLeaveToday,
+          remote,
+          pendingReqs,
+        };
+      }
+
+      function renderSummaryCards() {
+        const summary = calculateSummary();
+        const html = `
+            <div class="summary-card">
+                <div class="summary-label">Present Today</div>
+                <div class="summary-value">${summary.presentToday}</div>
+                <div class="summary-subtext">of ${summary.totalEmployees} scheduled</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">On Leave</div>
+                <div class="summary-value">${summary.onLeaveToday}</div>
+                <div class="summary-subtext">absent today</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Remote</div>
+                <div class="summary-value">${summary.remote}</div>
+                <div class="summary-subtext">working remotely</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Pending Reqs</div>
+                <div class="summary-value">${summary.pendingReqs}</div>
+                <div class="summary-subtext">awaiting approval</div>
+            </div>
+        `;
+        document.getElementById("summaryCards").innerHTML = html;
+      }
+
+      function renderEmployeeList() {
+        const html = data.attendanceAndLeave
+          .map((emp) => {
+            const attendance = calculateAttendancePercent(emp);
+            const pending = getPendingCount(emp);
+            const isActive = emp.employeeId === selectedEmployeeId;
+
+            return `
+                <div class="employee-item ${isActive ? "active" : ""}" data-employee-id="${emp.employeeId}">
+                    <div class="employee-info">
+                        <div class="employee-name">${emp.name}</div>
+                        <div class="employee-stat">${attendance}% attendance</div>
+                    </div>
+                    ${pending > 0 ? `<span class="badge badge-pending">${pending}</span>` : ""}
+                </div>
+            `;
+          })
+          .join("");
+
+        document.getElementById("employeeList").innerHTML = html;
+
+        document.querySelectorAll(".employee-item").forEach((item) => {
+          item.addEventListener("click", () => {
+            selectedEmployeeId = parseInt(item.dataset.employeeId);
+            renderEmployeeList();
+            renderEmployeeDetail();
+          });
+        });
+      }
+
+      function renderEmployeeDetail() {
+        const employee = data.attendanceAndLeave.find(
+          (e) => e.employeeId === selectedEmployeeId,
+        );
+        if (!employee) return;
+
+        const attendance = calculateAttendancePercent(employee);
+        const pending = getPendingCount(employee);
+
+        document.getElementById("selectedEmployeeName").textContent =
+          employee.name;
+        document.getElementById("selectedEmployeeStats").innerHTML = `
+            <div class="stat-item">
+                <span>Attendance:</span>
+                <span class="stat-value">${attendance}%</span>
+            </div>
+            ${
+              pending > 0
+                ? `
+                <div class="stat-item">
+                    <span>Pending:</span>
+                    <span class="stat-value">${pending} request${pending > 1 ? "s" : ""}</span>
+                </div>
+            `
+                : ""
+            }
+        `;
+
+        const employeeIndex = data.attendanceAndLeave.findIndex(
+          (e) => e.employeeId === employee.employeeId,
+        );
+
+        renderAttendanceTable(employee);
+        renderLeaveTable(employee, employeeIndex);
+      }
+
+      function renderAttendanceTable(employee) {
+        const html = reportDates
+          .map((date) => {
+            const record = employee.attendance.find((a) => a.date === date);
+            const status = record?.status || "Unknown";
+            const displayStatus = status === "Present" ? "Present" : "Leave";
+            const badgeClass =
+              status === "Present" ? "status-present" : "status-leave";
+
+            return `
+                <tr>
+                    <td>${formatDate(date)}</td>
+                    <td><span class="status-badge ${badgeClass}">${displayStatus}</span></td>
+                </tr>
+            `;
+          })
+          .join("");
+
+        document.getElementById("attendanceTableBody").innerHTML = html;
+      }
+
+      function approveRequest(employeeIndex, requestIndex) {
+        const employee = data.attendanceAndLeave[employeeIndex];
+        if (!employee || !employee.leaveRequests[requestIndex]) return;
+
+        employee.leaveRequests[requestIndex].status = "Approved";
+        renderSummaryCards();
+        renderEmployeeList();
+        renderEmployeeDetail();
+      }
+
+      function denyRequest(employeeIndex, requestIndex) {
+        const employee = data.attendanceAndLeave[employeeIndex];
+        if (!employee || !employee.leaveRequests[requestIndex]) return;
+
+        employee.leaveRequests[requestIndex].status = "Denied";
+        renderSummaryCards();
+        renderEmployeeList();
+        renderEmployeeDetail();
+      }
+
+      function renderLeaveTable(employee, employeeIndex) {
+        const html = employee.leaveRequests
+          .map((req, requestIndex) => {
+            const statusClass = `status-${req.status.toLowerCase()}`;
+            const isPending = req.status === "Pending";
+
+            return `
+                <tr>
+                    <td>${formatDate(req.date)}</td>
+                    <td>${req.reason}</td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${req.status}</span>
+                        ${
+                          isPending
+                            ? `
+                            <div class="request-actions">
+                                <button class="btn-action btn-approve" type="button" onclick="approveRequest(${employeeIndex}, ${requestIndex})">Approve</button>
+                                <button class="btn-action btn-deny" type="button" onclick="denyRequest(${employeeIndex}, ${requestIndex})">Deny</button>
+                            </div>
+                        `
+                            : ""
+                        }
+                    </td>
+                </tr>
+            `;
+          })
+          .join("");
+
+        document.getElementById("leaveTableBody").innerHTML =
+          html ||
+          `
+            <tr>
+                <td colspan="3" style="text-align: center; color: var(--gray-400); padding: 40px;">
+                    No leave requests
+                </td>
+            </tr>
+        `;
+      }
+
+      function initTabs() {
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.addEventListener("click", () => {
+            const tabName = tab.dataset.tab;
+
+            document
+              .querySelectorAll(".tab")
+              .forEach((t) => t.classList.remove("active"));
+            document
+              .querySelectorAll(".tab-content")
+              .forEach((tc) => tc.classList.remove("active"));
+
+            tab.classList.add("active");
+            document.getElementById(`${tabName}Tab`).classList.add("active");
+            activeTab = tabName;
+          });
+        });
+      }
+
+      function openRequestModal() {
+        if (!employeeSelect) return;
+
+        employeeSelect.innerHTML = `
+          <option value="">Select employee</option>
+          ${data.attendanceAndLeave
+            .map(
+              (employee) => `
+                <option value="${employee.employeeId}" ${employee.employeeId === selectedEmployeeId ? "selected" : ""}>
+                  ${employee.name}
+                </option>
+              `,
+            )
+            .join("")}
+        `;
+
+        const today = new Date().toISOString().split("T")[0];
+        if (startDate) startDate.min = today;
+        if (endDate) endDate.min = today;
+
+        requestModal.classList.remove("hidden");
+      }
+
+      function closeRequestModal() {
+        requestModal.classList.add("hidden");
+        leaveRequestForm.reset();
+      }
+
+      function initRequestModal() {
+        newRequestBtn = document.getElementById("newRequestBtn");
+        requestModal = document.getElementById("requestModal");
+        closeModal = document.getElementById("closeModal");
+        cancelBtn = document.getElementById("cancelBtn");
+        leaveRequestForm = document.getElementById("leaveRequestForm");
+        employeeSelect = document.getElementById("employeeSelect");
+        leaveType = document.getElementById("leaveType");
+        startDate = document.getElementById("startDate");
+        endDate = document.getElementById("endDate");
+        reason = document.getElementById("reason");
+
+        if (!newRequestBtn || !requestModal || !leaveRequestForm) return;
+
+        newRequestBtn.addEventListener("click", openRequestModal);
+        closeModal?.addEventListener("click", closeRequestModal);
+        cancelBtn?.addEventListener("click", closeRequestModal);
+
+        requestModal.addEventListener("click", (event) => {
+          if (event.target === requestModal) {
+            closeRequestModal();
+          }
+        });
+
+        leaveRequestForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const employeeId = Number(employeeSelect.value);
+          const selectedLeaveType = leaveType.value;
+          const startValue = startDate.value;
+          const endValue = endDate.value;
+          const reasonValue = reason.value.trim();
+
+          if (
+            !employeeId ||
+            !selectedLeaveType ||
+            !startValue ||
+            !endValue ||
+            !reasonValue
+          ) {
+            alert("Please complete all fields.");
+            return;
+          }
+
+          if (new Date(endValue) < new Date(startValue)) {
+            alert("End date cannot be before start date.");
+            return;
+          }
+
+          const employee = data.attendanceAndLeave.find(
+            (item) => item.employeeId === employeeId,
+          );
+
+          if (!employee) {
+            alert("Please select a valid employee.");
+            return;
+          }
+
+          employee.leaveRequests.unshift({
+            date: startValue,
+            reason: `${selectedLeaveType} - ${reasonValue}`,
+            status: "Pending",
+          });
+
+          selectedEmployeeId = employeeId;
+          renderSummaryCards();
+          renderEmployeeList();
+          renderEmployeeDetail();
+          closeRequestModal();
+          alert("Request submitted successfully.");
+        });
+      }
+
+      function handleDaySelection(event) {
+        const newDate = event.target.value;
+        if (!newDate) return;
+
+        selectedDay = newDate;
+        renderSummaryCards();
+        displayCurrentDate();
+      }
+
+      function init() {
+        const daySelector = document.getElementById("daySelector");
+        if (daySelector) {
+          daySelector.value = selectedDay;
+          daySelector.addEventListener("change", handleDaySelection);
+        }
+
+        renderSummaryCards();
+        renderEmployeeList();
+        renderEmployeeDetail();
+        initTabs();
+        initRequestModal();
+        displayCurrentDate();
+      }
+
+      document.addEventListener("DOMContentLoaded", init);
+
+      function displayCurrentDate() {
+        const selected = new Date(`${selectedDay}T00:00:00`);
+
+        const options = {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        };
+
+        const dateElement = document.getElementById("currentDate");
+
+        if (dateElement) {
+          dateElement.textContent = selected.toLocaleDateString(
+            "en-GB",
+            options,
+          );
+        }
+      }
+    </script>
+  </body>
+</html>
