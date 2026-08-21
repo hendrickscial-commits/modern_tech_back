@@ -71,6 +71,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(2020, () => {
-  console.log("http://localhost:2020");
+const PORT = process.env.PORT || 2020;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
