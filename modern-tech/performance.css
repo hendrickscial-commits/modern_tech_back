@@ -132,14 +132,19 @@ button{
 
     /* SIDEBAR */
 .sidebar {
-  width: 260px;
-  background: #0a2f3f;
-  color: #e6f2f8;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #0a2f3f;
+    color: #e6f2f8;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
 }
-
 .mobile-header {
   display: flex;
   flex-direction: column;
@@ -365,52 +370,27 @@ nav a i {
 
 }
 
-
-/*=========================================================
-                MAIN CONTENT
-==========================================================*/
-
+         /* MAIN CONTENT */
 .main-content{
-
     flex:1;
-
     margin-left:270px;
-
     display:flex;
-
     flex-direction:column;
-
     min-height:100vh;
-
 }
 
-
-/*=========================================================
-                    TOPBAR
-==========================================================*/
-
+            /* TOPBAR */
 .topbar{
-
     background:white;
-
     height:85px;
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     padding:0 35px;
-
     position:sticky;
-
     top:0;
-
     z-index:500;
-
     box-shadow:var(--shadow-sm);
-
 }
 
 .menu-toggle{

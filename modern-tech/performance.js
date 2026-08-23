@@ -1,16 +1,9 @@
-/* =========================================================
-                    EMPLOYEE DATABASE
-========================================================= */
-
+// EMPLOYEE DATABASE
 let employees = [];
 let selectedEmployee = null;
 let originalComment = "";
 
-
-/* =========================================================
-                    DOM ELEMENTS
-========================================================= */
-
+    //    DOM ELEMENTS
 const employeeContainer = document.getElementById("employeeContainer");
 const searchInput = document.getElementById("searchInput");
 
@@ -57,10 +50,7 @@ const confirmationModal =
 const confirmYes = document.getElementById("confirmYes");
 const confirmNo = document.getElementById("confirmNo");
 
-/* =========================================================
-                    CURRENT DATE
-========================================================= */
-
+// CURRENT DATE
 const today = new Date();
 
 if (currentDate) {
@@ -73,13 +63,8 @@ if (currentDate) {
         });
 }
 
-
-/* =========================================================
-                UPDATE DASHBOARD STATISTICS
-========================================================= */
-
+//  UPDATE DASHBOARD STATISTICS
 function updateStatistics() {
-
     console.log("Updating statistics...");
     console.log("Employees:", employees);
 
@@ -124,12 +109,8 @@ function updateStatistics() {
     });
 }
 
-/* =========================================================
-                    PERFORMANCE BADGE
-========================================================= */
-
+// PERFORMANCE BADGE
 function getBadgeClass(rating) {
-
     switch (rating) {
 
         case "Excellent":
@@ -149,10 +130,7 @@ function getBadgeClass(rating) {
     }
 }
 
-
-/* =========================================================
-                    CREATE EMPLOYEE CARDS
-========================================================= */
+  // CREATE EMPLOYEE CARDS
 function createEmployeeCard(employee) {
     return `
         <div class="employee-card fade-in">
@@ -208,13 +186,8 @@ function createEmployeeCard(employee) {
     `;
 }
 
-
-/* =========================================================
-                    DISPLAY EMPLOYEES
-========================================================= */
-
+  // DISPLAY EMPLOYEES
 function displayEmployees(list) {
-
     if (!employeeContainer) {
         console.error("employeeContainer not found.");
         return;
@@ -222,11 +195,8 @@ function displayEmployees(list) {
 
     employeeContainer.innerHTML = "";
 
-
     /* No employees */
-
     if (!list || list.length === 0) {
-
         employeeContainer.style.display = "none";
 
         if (emptyState) {
@@ -236,25 +206,18 @@ function displayEmployees(list) {
         return;
     }
 
-
     /* Employees exist */
-
     employeeContainer.style.display = "grid";
-
     if (emptyState) {
         emptyState.style.display = "none";
     }
 
-
     /* Create cards */
-
     list.forEach(employee => {
-
         employeeContainer.insertAdjacentHTML(
             "beforeend",
             createEmployeeCard(employee)
         );
-
     });
 }
 
@@ -271,10 +234,7 @@ if (employeeContainer) {
     });
 }
 
-
-/* =========================================================
-                    LOAD PERFORMANCE DATA
-========================================================= */
+    // LOAD PERFORMANCE DATA
 async function loadEmployees() {
     try {
         if (loadingOverlay) {
@@ -346,12 +306,8 @@ async function loadEmployees() {
     }
 }
 
-/* =========================================================
-                    SEARCH EMPLOYEES
-========================================================= */
-
+// SEARCH EMPLOYEES
 if (searchInput) {
-
     searchInput.addEventListener(
         "keyup",
         function () {
@@ -360,7 +316,6 @@ if (searchInput) {
                 this.value
                     .toLowerCase()
                     .trim();
-
 
             const filteredEmployees =
                 employees.filter(employee =>
@@ -389,23 +344,15 @@ if (searchInput) {
 
                 );
 
-
             displayEmployees(
                 filteredEmployees
             );
-
         }
     );
-
 }
 
-
-/* =========================================================
-                UPDATE SELECTED EMPLOYEE
-========================================================= */
-
+   // UPDATE SELECTED EMPLOYEE
 async function showEmployee(employeeID, openPanel = true) {
-
     try {
 
         console.log(

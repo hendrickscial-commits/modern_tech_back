@@ -39,59 +39,54 @@
 <div class="container">
 
        <!-- SIDEBAR -->
-        <aside class="sidebar">
+    <aside id="sidebar" class="sidebar">
+      <div class="mobile-header">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-building"></i>
+          </div>
 
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fa-solid fa-building"></i>
-                </div>
+          <div>
+            <h2>ModernTech</h2>
+            <span>HR Management</span>
+          </div>
+        </div>
 
-                <div>
-                    <h2>ModernTech</h2>
-                    <span>HR Management</span>
-                    </div>
-                </div>
+        <nav>
+          <a href="#" class="active">
+            <i class="fa-solid fa-users"></i>
+            <span>Employees Data</span>
+          </a>
 
-            <nav>
-                <a href="employees.html">
-                    <i class="fa-solid fa-users"></i>
-                    <span>Employees Data</span>
-                </a>
+          <a href="payroll.html">
+            <i class="fa-solid fa-money-check-dollar"></i>
+            <span>Payroll</span>
+          </a>
 
-                <a href="payroll.html">
-                    <i class="fa-solid fa-money-check-dollar"></i>
-                    <span>Payroll</span>
-                </a>
+          <a href="leave.html">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Time Off/Attendance</span>
+          </a>
 
-                <a href="leave.html">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span>Time Off/Attendance</span>
-                </a>
+          <a href="performance.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Performance</span>
+          </a>
+        </nav>
+      </div>
 
-                <a href="performance.html" class="active">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Performance</span>
-                </a>
+      <div class="sidebar-footer">
+        <div class="avatar">AU</div>
+        <div>
+          <h4>Admin User</h4>
+          <p>HR Administrator</p>
+        </div>
 
-                <a href="index.html" class="logout-link-mobile-nav">
-                    <i class="fa-solid fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="avatar">AU</div>
-
-                <div>
-                    <h4>Admin User</h4>
-                    <p>HR Administrator</p>
-                </div>
-
-                <button class="logout-btn" title="Logout" type="button">
-                    <i class="fa-solid fa-sign-out-alt"></i>
-                </button>
-            </div>
-        </aside>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
 
     <!-- MAIN CONTENT -->
         <main class="main-content">
@@ -697,90 +692,8 @@
 
     </div>
 
-    <!--=========================================
-                FOOTER
-    ==========================================-->
 
-    <footer class="footer">
-
-        <div class="footer-content">
-
-            <div class="footer-left">
-
-                <img
-                    src="images/logo.png"
-                    alt="ModernTech Logo">
-
-                <div>
-
-                    <h3>
-
-                        ModernTech Solutions
-
-                    </h3>
-
-                    <p>
-
-                        Employee Performance Management System
-
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="footer-center">
-
-                <p>
-
-                    © 2026 ModernTech Solutions.
-
-                </p>
-
-                <p>
-
-                    All Rights Reserved.
-
-                </p>
-
-            </div>
-
-            <div class="footer-right">
-
-                <a aria-label="Facebook">
-
-                    <i class="fa-brands fa-facebook-f"></i>
-
-                </a>
-
-                <a aria-label="Twitter">
-
-                    <i class="fa-brands fa-x-twitter"></i>
-
-                </a>
-
-                <a href="" aria-label="LinkedIn">
-
-                    <i class="fa-brands fa-linkedin-in"></i>
-
-                </a>
-
-                <a href="#" aria-label="GitHub">
-
-                    <i class="fa-brands fa-github"></i>
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </footer>
-
-    <!--=========================================
-                JAVASCRIPT
-    ==========================================-->
-
+            <!-- JAVASCRIPT -->
     <script src="performance.js"></script>
 
 </body>
