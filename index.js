@@ -20,6 +20,8 @@ import {
 import employeeRoutes from "./src/routes/employeeRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import payrollRoutes from "./routes/payrollRoutes.js";
+import performanceRoutes from "./routes/performanceRoutes.js";
+import "./config/database.js";
 
 dotenv.config();
 
@@ -57,6 +59,10 @@ app.get("/attendance/:employee_id", getAttendanceByIdCon);
 
 // Employee routes
 app.use("/employees", employeeRoutes);
+app.use("/api/employees", employeeRoutes);
+
+// Performance routes
+app.use("/api/performance", performanceRoutes);
 
 //Auth routes
 app.use("/auth", authRoutes);
@@ -74,5 +80,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 2020;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
