@@ -242,7 +242,7 @@ async function loadEmployees() {
         }
 
         const response = await fetch(
-            "http://localhost:3000/api/performance"
+            "https://modern-tech-back.onrender.com"
         );
 
         if (!response.ok) {
@@ -377,7 +377,7 @@ async function showEmployee(employeeID, openPanel = true) {
 
         const response =
             await fetch(
-                `http://localhost:3000/api/performance/${numericID}`
+                `https://modern-tech-back.onrender.com/api/performance/${numericID}`
             );
 
 
