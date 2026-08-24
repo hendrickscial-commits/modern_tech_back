@@ -1,9 +1,16 @@
+// =========================================================
 // EMPLOYEE DATABASE
+// =========================================================
+
 let employees = [];
 let selectedEmployee = null;
 let originalComment = "";
 
-    //    DOM ELEMENTS
+
+// =========================================================
+// DOM ELEMENTS
+// =========================================================
+
 const employeeContainer = document.getElementById("employeeContainer");
 const searchInput = document.getElementById("searchInput");
 
@@ -50,7 +57,19 @@ const confirmationModal =
 const confirmYes = document.getElementById("confirmYes");
 const confirmNo = document.getElementById("confirmNo");
 
+
+// =========================================================
+// BACKEND API URL
+// =========================================================
+
+const API_URL =
+    "https://modern-tech-back.onrender.com";
+
+
+// =========================================================
 // CURRENT DATE
+// =========================================================
+
 const today = new Date();
 
 if (currentDate) {
@@ -63,13 +82,19 @@ if (currentDate) {
         });
 }
 
-//  UPDATE DASHBOARD STATISTICS
+
+// =========================================================
+// UPDATE DASHBOARD STATISTICS
+// =========================================================
+
 function updateStatistics() {
+
     console.log("Updating statistics...");
     console.log("Employees:", employees);
 
     if (totalEmployees) {
-        totalEmployees.textContent = employees.length;
+        totalEmployees.textContent =
+            employees.length;
     }
 
     if (excellentCount) {
@@ -102,15 +127,36 @@ function updateStatistics() {
 
     console.log("Statistics:", {
         total: employees.length,
-        excellent: employees.filter(e => e.rating === "Excellent").length,
-        good: employees.filter(e => e.rating === "Good").length,
-        average: employees.filter(e => e.rating === "Average").length,
-        improvement: employees.filter(e => e.rating === "Needs Improvement").length
+
+        excellent:
+            employees.filter(
+                e => e.rating === "Excellent"
+            ).length,
+
+        good:
+            employees.filter(
+                e => e.rating === "Good"
+            ).length,
+
+        average:
+            employees.filter(
+                e => e.rating === "Average"
+            ).length,
+
+        improvement:
+            employees.filter(
+                e => e.rating === "Needs Improvement"
+            ).length
     });
 }
 
+
+// =========================================================
 // PERFORMANCE BADGE
+// =========================================================
+
 function getBadgeClass(rating) {
+
     switch (rating) {
 
         case "Excellent":
@@ -130,184 +176,420 @@ function getBadgeClass(rating) {
     }
 }
 
-  // CREATE EMPLOYEE CARDS
+
+// =========================================================
+// CREATE EMPLOYEE CARDS
+// =========================================================
+
 function createEmployeeCard(employee) {
+
     return `
         <div class="employee-card fade-in">
+
             <div class="employee-header">
+
                 <img
                     src="${employee.image || "./employee1.jpg"}"
                     alt="${employee.name}"
-                    onerror="this.src='./employee1.jpg';">
+                    onerror="this.src='./employee1.jpg';"
+                >
 
                 <div class="employee-info">
+
                     <h3>${employee.name}</h3>
+
                     <p>${employee.position}</p>
-                    <span class="employee-id">${employee.id}</span>
+
+                    <span class="employee-id">
+                        ${employee.id}
+                    </span>
+
                 </div>
+
             </div>
+
 
             <div class="employee-stats">
+
                 <div class="employee-stat">
+
                     <span>Department</span>
-                    <strong>${employee.department}</strong>
+
+                    <strong>
+                        ${employee.department}
+                    </strong>
+
                 </div>
 
+
                 <div class="employee-stat">
+
                     <span>Attendance</span>
-                    <strong>${employee.attendance}%</strong>
+
+                    <strong>
+                        ${employee.attendance}%
+                    </strong>
+
                 </div>
 
+
                 <div class="employee-stat">
+
                     <span>Performance</span>
-                    <strong>${employee.score}%</strong>
+
+                    <strong>
+                        ${employee.score}%
+                    </strong>
+
                 </div>
 
+
                 <div class="employee-stat">
+
                     <span>Rating</span>
-                    <strong>${employee.rating}</strong>
+
+                    <strong>
+                        ${employee.rating}
+                    </strong>
+
                 </div>
+
             </div>
+
 
             <span class="performance-badge ${getBadgeClass(employee.rating)}">
                 ${employee.rating}
             </span>
 
+
             <div class="card-buttons">
+
                 <button
                     type="button"
                     class="view-btn"
-                    data-employee-id="${employee.apiId}">
+                    data-employee-id="${employee.apiId}"
+                >
+
                     <i class="fa-solid fa-eye"></i>
+
                     View
+
                 </button>
+
             </div>
+
         </div>
     `;
 }
 
-  // DISPLAY EMPLOYEES
+
+// =========================================================
+// DISPLAY EMPLOYEES
+// =========================================================
+
 function displayEmployees(list) {
+
     if (!employeeContainer) {
-        console.error("employeeContainer not found.");
+
+        console.error(
+            "employeeContainer not found."
+        );
+
         return;
     }
 
+
     employeeContainer.innerHTML = "";
 
-    /* No employees */
+
+    // No employees
     if (!list || list.length === 0) {
-        employeeContainer.style.display = "none";
+
+        employeeContainer.style.display =
+            "none";
 
         if (emptyState) {
-            emptyState.style.display = "block";
+
+            emptyState.style.display =
+                "block";
         }
 
         return;
     }
 
-    /* Employees exist */
-    employeeContainer.style.display = "grid";
+
+    // Employees exist
+    employeeContainer.style.display =
+        "grid";
+
     if (emptyState) {
-        emptyState.style.display = "none";
+
+        emptyState.style.display =
+            "none";
     }
 
-    /* Create cards */
+
+    // Create cards
     list.forEach(employee => {
+
         employeeContainer.insertAdjacentHTML(
             "beforeend",
             createEmployeeCard(employee)
         );
+
     });
 }
+
+
+// =========================================================
+// VIEW BUTTON
+// =========================================================
 
 if (employeeContainer) {
-    employeeContainer.addEventListener("click", event => {
-        const viewButton = event.target.closest(".view-btn");
 
-        if (!viewButton) {
-            return;
+    employeeContainer.addEventListener(
+        "click",
+        event => {
+
+            const viewButton =
+                event.target.closest(".view-btn");
+
+
+            if (!viewButton) {
+                return;
+            }
+
+
+            const employeeId =
+                viewButton.dataset.employeeId;
+
+
+            console.log(
+                "View button clicked:",
+                employeeId
+            );
+
+
+            showEmployee(
+                employeeId,
+                true
+            );
+
         }
-
-        const employeeId = viewButton.dataset.employeeId;
-        showEmployee(employeeId, true);
-    });
+    );
 }
 
-    // LOAD PERFORMANCE DATA
-async function loadEmployees() {
-    try {
-        if (loadingOverlay) {
-            loadingOverlay.style.display = "flex";
-        }
 
-        const response = await fetch(
-            "https://modern-tech-back.onrender.com"
+// =========================================================
+// LOAD PERFORMANCE DATA
+// =========================================================
+
+async function loadEmployees() {
+
+    try {
+
+        console.log(
+            "Fetching performance data..."
         );
 
-        if (!response.ok) {
-            throw new Error(`API returned ${response.status}`);
+
+        if (loadingOverlay) {
+
+            loadingOverlay.style.display =
+                "flex";
         }
 
-        const result = await response.json();
 
+        // IMPORTANT:
+        // The /performance endpoint is required.
+        const response = await fetch(
+            `${API_URL}/performance`
+        );
+
+
+        console.log(
+            "Performance response status:",
+            response.status
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `API returned ${response.status}`
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "Performance API response:",
+            result
+        );
+
+
+        // Handle different possible API response formats
         const records =
-            Array.isArray(result) ? result :
-            Array.isArray(result.data) ? result.data :
-            Array.isArray(result.employees) ? result.employees :
-            Array.isArray(result.performance) ? result.performance :
-            Array.isArray(result.records) ? result.records :
-            [];
 
+            Array.isArray(result)
+                ? result
+
+            : Array.isArray(result.data)
+                ? result.data
+
+            : Array.isArray(result.employees)
+                ? result.employees
+
+            : Array.isArray(result.performance)
+                ? result.performance
+
+            : Array.isArray(result.records)
+                ? result.records
+
+            : [];
+
+
+        console.log(
+            "Performance records:",
+            records
+        );
+
+
+        // Convert API data into frontend format
         employees = records.map(employee => {
+
             const apiId =
                 employee.employee_id ??
                 employee.employeeId ??
                 employee.id;
 
-            const numericId = Number(apiId);
+
+            const numericId =
+                Number(apiId);
+
 
             return {
+
                 apiId: apiId,
-                id: Number.isNaN(numericId)
-                    ? String(apiId || "UNKNOWN")
-                    : `EMP${String(numericId).padStart(3, "0")}`,
-                name: employee.name || "Unknown Employee",
-                department: employee.department || "N/A",
-                position: employee.position || "Employee",
-                attendance: employee.attendance ?? 0,
-                score: employee.performance_score ??
+
+                id:
+                    Number.isNaN(numericId)
+                        ? String(
+                            apiId ||
+                            "UNKNOWN"
+                        )
+                        : `EMP${String(
+                            numericId
+                        ).padStart(
+                            3,
+                            "0"
+                        )}`,
+
+                name:
+                    employee.name ||
+                    "Unknown Employee",
+
+                department:
+                    employee.department ||
+                    "N/A",
+
+                position:
+                    employee.position ||
+                    "Employee",
+
+                attendance:
+                    employee.attendance ??
+                    0,
+
+                score:
+                    employee.performance_score ??
                     employee.performanceScore ??
                     employee.score ??
                     0,
-                rating: employee.rating || "N/A",
-                comment: employee.manager_comments ||
-                    employee.managerComments ||
+
+                rating:
+                    employee.rating ||
+                    "N/A",
+
+                comment:
+                    employee.manager_comments ??
+                    employee.managerComments ??
                     "",
-                image: employee.image || ""
+
+                image:
+                    employee.image ||
+                    ""
+
             };
+
         });
 
-        displayEmployees(employees);
+
+        console.log(
+            "Formatted employees:",
+            employees
+        );
+
+
+        displayEmployees(
+            employees
+        );
+
+
         updateStatistics();
 
+
+        // Automatically show first employee
         if (employees.length > 0) {
-            await showEmployee(employees[0].apiId, false);
+
+            await showEmployee(
+                employees[0].apiId,
+                false
+            );
+
         }
+
     } catch (error) {
-        console.error("Error fetching performance data:", error);
+
+        console.error(
+            "ERROR FETCHING PERFORMANCE DATA:",
+            error
+        );
+
+
         employees = [];
+
+
         displayEmployees([]);
-        showToast("Unable to load performance data. Check the backend.");
+
+
+        showToast(
+            "Unable to load performance data. Check the backend."
+        );
+
     } finally {
+
         if (loadingOverlay) {
-            loadingOverlay.style.display = "none";
+
+            loadingOverlay.style.display =
+                "none";
         }
+
     }
+
 }
 
+
+// =========================================================
 // SEARCH EMPLOYEES
+// =========================================================
+
 if (searchInput) {
+
     searchInput.addEventListener(
         "keyup",
         function () {
@@ -317,42 +599,62 @@ if (searchInput) {
                     .toLowerCase()
                     .trim();
 
+
             const filteredEmployees =
-                employees.filter(employee =>
+                employees.filter(
+                    employee =>
 
-                    (employee.name || "")
-                        .toLowerCase()
-                        .includes(searchValue)
+                        (employee.name || "")
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
 
-                    ||
+                        ||
 
-                    (employee.department || "")
-                        .toLowerCase()
-                        .includes(searchValue)
+                        (employee.department || "")
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
 
-                    ||
+                        ||
 
-                    (employee.position || "")
-                        .toLowerCase()
-                        .includes(searchValue)
+                        (employee.position || "")
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
 
-                    ||
+                        ||
 
-                    (employee.id || "")
-                        .toLowerCase()
-                        .includes(searchValue)
-
+                        (employee.id || "")
+                            .toLowerCase()
+                            .includes(
+                                searchValue
+                            )
                 );
+
 
             displayEmployees(
                 filteredEmployees
             );
+
         }
     );
+
 }
 
-   // UPDATE SELECTED EMPLOYEE
-async function showEmployee(employeeID, openPanel = true) {
+
+// =========================================================
+// SHOW EMPLOYEE DETAILS
+// =========================================================
+
+async function showEmployee(
+    employeeID,
+    openPanel = true
+) {
+
     try {
 
         console.log(
@@ -362,11 +664,16 @@ async function showEmployee(employeeID, openPanel = true) {
 
 
         /*
-           EMP001 -> 1
-           EMP010 -> 10
+            Convert:
+
+            EMP001 -> 001
+            EMP010 -> 010
+            1 -> 1
         */
 
-       const numericID = String(employeeID).replace(/^EMP/i, "");
+        const numericID =
+            String(employeeID)
+                .replace(/^EMP/i, "");
 
 
         console.log(
@@ -375,10 +682,18 @@ async function showEmployee(employeeID, openPanel = true) {
         );
 
 
+        // IMPORTANT FIX:
+        // There MUST be a "/" before numericID.
         const response =
             await fetch(
-                `https://modern-tech-back.onrender.com/performance ${numericID}`
+                `${API_URL}/performance/${numericID}`
             );
+
+
+        console.log(
+            "Individual employee response status:",
+            response.status
+        );
 
 
         if (!response.ok) {
@@ -395,23 +710,24 @@ async function showEmployee(employeeID, openPanel = true) {
 
 
         console.log(
-            "API response:",
+            "Individual employee API response:",
             result
         );
 
 
         /*
-           Support both:
+            Support:
 
-           { data: employee }
+            { data: employee }
 
-           and
+            OR
 
-           employee
+            employee
         */
 
         const employee =
-            result.data || result;
+            result.data ||
+            result;
 
 
         if (!employee) {
@@ -421,7 +737,6 @@ async function showEmployee(employeeID, openPanel = true) {
             );
 
             return;
-
         }
 
 
@@ -431,48 +746,71 @@ async function showEmployee(employeeID, openPanel = true) {
         );
 
 
-        /* Store selected employee */
-
+        // Store selected employee
         selectedEmployee =
             employee;
 
 
         originalComment =
-            employee.manager_comments || "";
+            employee.manager_comments ||
+            employee.managerComments ||
+            "";
 
 
-        /* Employee details */
+        // =================================================
+        // EMPLOYEE DETAILS
+        // =================================================
 
         if (detailName) {
 
             detailName.textContent =
-                employee.name || "Unknown Employee";
-
+                employee.name ||
+                "Unknown Employee";
         }
 
 
         if (detailPosition) {
 
             detailPosition.textContent =
-                employee.position || "Employee";
-
+                employee.position ||
+                "Employee";
         }
 
 
         if (detailID) {
 
-            detailID.textContent =
-                `EMP${String(employee.employee_id)
-                    .padStart(3, "0")}`;
+            const employeeId =
+                employee.employee_id ??
+                employee.employeeId ??
+                employee.id ??
+                numericID;
 
+
+            const numericEmployeeId =
+                Number(employeeId);
+
+
+            detailID.textContent =
+                Number.isNaN(
+                    numericEmployeeId
+                )
+
+                    ? employeeId
+
+                    : `EMP${String(
+                        numericEmployeeId
+                    ).padStart(
+                        3,
+                        "0"
+                    )}`;
         }
 
 
         if (detailDepartment) {
 
             detailDepartment.textContent =
-                employee.department || "N/A";
-
+                employee.department ||
+                "N/A";
         }
 
 
@@ -480,57 +818,62 @@ async function showEmployee(employeeID, openPanel = true) {
 
             detailAttendance.textContent =
                 `${employee.attendance ?? 0}%`;
-
         }
 
 
         if (detailScore) {
 
             detailScore.textContent =
-                `${employee.performance_score ?? 0}%`;
-
+                `${employee.performance_score ??
+                    employee.performanceScore ??
+                    employee.score ??
+                    0}%`;
         }
 
 
         if (detailComment) {
 
             detailComment.value =
-                employee.manager_comments || "";
+                employee.manager_comments ??
+                employee.managerComments ??
+                "";
 
             detailComment.readOnly =
                 true;
-
         }
 
 
         if (detailBadge) {
 
+            const rating =
+                employee.rating ||
+                "N/A";
+
+
             detailBadge.textContent =
-                employee.rating || "N/A";
+                rating;
+
 
             detailBadge.className =
                 "performance-badge " +
-                getBadgeClass(employee.rating);
-
+                getBadgeClass(rating);
         }
 
 
         if (detailImage) {
 
             detailImage.src =
-                employee.image || "./employee1.jpg";
+                employee.image ||
+                "./employee1.jpg";
+
 
             detailImage.alt =
-                employee.name || "Employee";
-
+                employee.name ||
+                "Employee";
         }
 
 
-        /*
-           Only open the panel when the user actually
-           clicks View.
-        */
-
+        // Open details panel
         if (
             openPanel &&
             detailsPanel
@@ -538,7 +881,6 @@ async function showEmployee(employeeID, openPanel = true) {
 
             detailsPanel.style.display =
                 "block";
-
         }
 
 
@@ -546,11 +888,10 @@ async function showEmployee(employeeID, openPanel = true) {
             "Employee details updated successfully."
         );
 
-
     } catch (error) {
 
         console.error(
-            "Error loading employee details:",
+            "ERROR LOADING EMPLOYEE DETAILS:",
             error
         );
 
@@ -564,167 +905,190 @@ async function showEmployee(employeeID, openPanel = true) {
 }
 
 
-/* =========================================================
-                    EDIT COMMENT
-========================================================= */
+// =========================================================
+// EDIT COMMENT
+// =========================================================
 
 if (editBtn) {
 
-    editBtn.addEventListener("click", () => {
+    editBtn.addEventListener(
+        "click",
+        () => {
 
-        if (!detailComment) {
-            return;
+            if (!detailComment) {
+                return;
+            }
+
+
+            detailComment.readOnly =
+                false;
+
+
+            detailComment.focus();
+
+
+            showToast(
+                "Edit mode enabled."
+            );
+
         }
-
-
-        detailComment.readOnly =
-            false;
-
-
-        detailComment.focus();
-
-
-        showToast(
-            "Edit mode enabled."
-        );
-
-    });
+    );
 
 }
 
 
-/* =========================================================
-                    SAVE COMMENT
-========================================================= */
+// =========================================================
+// SAVE COMMENT
+// =========================================================
 
 if (saveBtn) {
 
-    saveBtn.addEventListener("click", () => {
+    saveBtn.addEventListener(
+        "click",
+        () => {
 
-        if (
-            !selectedEmployee ||
-            !detailComment
-        ) {
-            return;
+            if (
+                !selectedEmployee ||
+                !detailComment
+            ) {
+                return;
+            }
+
+
+            selectedEmployee.manager_comments =
+                detailComment.value;
+
+
+            selectedEmployee.comment =
+                detailComment.value;
+
+
+            originalComment =
+                detailComment.value;
+
+
+            detailComment.readOnly =
+                true;
+
+
+            showToast(
+                "Changes saved successfully."
+            );
+
         }
-
-
-        selectedEmployee.manager_comments =
-            detailComment.value;
-
-
-        selectedEmployee.comment =
-            detailComment.value;
-
-
-        originalComment =
-            detailComment.value;
-
-
-        detailComment.readOnly =
-            true;
-
-
-        showToast(
-            "Changes saved successfully."
-        );
-
-    });
+    );
 
 }
 
 
-/* =========================================================
-                    CANCEL EDIT
-========================================================= */
+// =========================================================
+// CANCEL EDIT
+// =========================================================
 
 if (cancelBtn) {
 
-    cancelBtn.addEventListener("click", () => {
+    cancelBtn.addEventListener(
+        "click",
+        () => {
 
-        if (!detailComment) {
+            if (!detailComment) {
+                return;
+            }
+
+
+            detailComment.value =
+                originalComment;
+
+
+            detailComment.readOnly =
+                true;
+
+
+            showToast(
+                "Changes cancelled."
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// SIDEBAR TOGGLE
+// =========================================================
+
+if (
+    menuToggle &&
+    sidebar
+) {
+
+    menuToggle.addEventListener(
+        "click",
+        () => {
+
+            sidebar.classList.toggle(
+                "active"
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// SCROLL TO TOP
+// =========================================================
+
+window.addEventListener(
+    "scroll",
+    () => {
+
+        if (!scrollTopBtn) {
             return;
         }
 
 
-        detailComment.value =
-            originalComment;
+        if (window.scrollY > 300) {
 
+            scrollTopBtn.style.display =
+                "flex";
 
-        detailComment.readOnly =
-            true;
+        } else {
 
+            scrollTopBtn.style.display =
+                "none";
 
-        showToast(
-            "Changes cancelled."
-        );
-
-    });
-
-}
-
-
-/* =========================================================
-                    SIDEBAR TOGGLE
-========================================================= */
-
-if (menuToggle && sidebar) {
-
-    menuToggle.addEventListener("click", () => {
-
-        sidebar.classList.toggle("active");
-
-    });
-
-}
-
-
-/* =========================================================
-                    SCROLL TO TOP
-========================================================= */
-
-window.addEventListener("scroll", () => {
-
-    if (!scrollTopBtn) {
-        return;
-    }
-
-
-    if (window.scrollY > 300) {
-
-        scrollTopBtn.style.display =
-            "flex";
-
-    } else {
-
-        scrollTopBtn.style.display =
-            "none";
+        }
 
     }
-
-});
+);
 
 
 if (scrollTopBtn) {
 
-    scrollTopBtn.addEventListener("click", () => {
+    scrollTopBtn.addEventListener(
+        "click",
+        () => {
 
-        window.scrollTo({
+            window.scrollTo({
 
-            top: 0,
+                top: 0,
 
-            behavior: "smooth"
+                behavior: "smooth"
 
-        });
+            });
 
-    });
+        }
+    );
 
 }
 
 
-/* =========================================================
-                    TOAST NOTIFICATIONS
-========================================================= */
+// =========================================================
+// TOAST NOTIFICATIONS
+// =========================================================
 
 function showToast(message) {
 
@@ -740,7 +1104,9 @@ function showToast(message) {
 
 
     const toast =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     toast.className =
@@ -748,6 +1114,7 @@ function showToast(message) {
 
 
     toast.innerHTML = `
+
         <strong>
             Success
         </strong>
@@ -755,6 +1122,7 @@ function showToast(message) {
         <br>
 
         ${message}
+
     `;
 
 
@@ -763,18 +1131,21 @@ function showToast(message) {
     );
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        toast.remove();
+            toast.remove();
 
-    }, 3000);
+        },
+        3000
+    );
 
 }
 
 
-/* =========================================================
-                    REFRESH EMPLOYEES
-========================================================= */
+// =========================================================
+// REFRESH EMPLOYEES
+// =========================================================
 
 if (refreshBtn) {
 
@@ -786,7 +1157,6 @@ if (refreshBtn) {
 
                 loadingOverlay.style.display =
                     "flex";
-
             }
 
 
@@ -797,7 +1167,6 @@ if (refreshBtn) {
 
                 loadingOverlay.style.display =
                     "none";
-
             }
 
 
@@ -811,9 +1180,9 @@ if (refreshBtn) {
 }
 
 
-/* =========================================================
-                    SORT EMPLOYEES
-========================================================= */
+// =========================================================
+// SORT EMPLOYEES
+// =========================================================
 
 let ascending = true;
 
@@ -824,15 +1193,21 @@ if (sortBtn) {
         "click",
         () => {
 
-            employees.sort((a, b) => {
+            employees.sort(
+                (a, b) => {
 
-                return ascending
+                    return ascending
 
-                    ? a.name.localeCompare(b.name)
+                        ? a.name.localeCompare(
+                            b.name
+                        )
 
-                    : b.name.localeCompare(a.name);
+                        : b.name.localeCompare(
+                            a.name
+                        );
 
-            });
+                }
+            );
 
 
             ascending =
@@ -854,9 +1229,9 @@ if (sortBtn) {
 }
 
 
-/* =========================================================
-                    CONFIRMATION MODAL
-========================================================= */
+// =========================================================
+// CONFIRMATION MODAL
+// =========================================================
 
 function showConfirmation(
     message,
@@ -873,7 +1248,6 @@ function showConfirmation(
 
         modalMessage.textContent =
             message;
-
     }
 
 
@@ -888,35 +1262,38 @@ function showConfirmation(
 
     if (confirmYes) {
 
-        confirmYes.onclick = () => {
+        confirmYes.onclick =
+            () => {
 
-            confirmationModal.style.display =
-                "none";
+                confirmationModal.style.display =
+                    "none";
 
-            callback();
 
-        };
+                callback();
+
+            };
 
     }
 
 
     if (confirmNo) {
 
-        confirmNo.onclick = () => {
+        confirmNo.onclick =
+            () => {
 
-            confirmationModal.style.display =
-                "none";
+                confirmationModal.style.display =
+                    "none";
 
-        };
+            };
 
     }
 
 }
 
 
-/* =========================================================
-                CLOSE DETAILS PANEL
-========================================================= */
+// =========================================================
+// CLOSE DETAILS PANEL
+// =========================================================
 
 if (closePanel) {
 
@@ -928,7 +1305,6 @@ if (closePanel) {
 
                 detailsPanel.style.display =
                     "none";
-
             }
 
         }
@@ -937,34 +1313,9 @@ if (closePanel) {
 }
 
 
-/* =========================================================
-                REOPEN DETAILS PANEL
-========================================================= */
-
-document.addEventListener(
-    "click",
-    event => {
-
-        if (
-            event.target.closest(".view-btn")
-        ) {
-
-            if (detailsPanel) {
-
-                detailsPanel.style.display =
-                    "block";
-
-            }
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-                    ESC KEY CLOSES MODAL
-========================================================= */
+// =========================================================
+// ESC KEY CLOSES MODAL
+// =========================================================
 
 document.addEventListener(
     "keydown",
@@ -976,7 +1327,6 @@ document.addEventListener(
 
                 confirmationModal.style.display =
                     "none";
-
             }
 
         }
@@ -985,9 +1335,9 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-                    CLICK OUTSIDE MODAL
-========================================================= */
+// =========================================================
+// CLICK OUTSIDE MODAL
+// =========================================================
 
 window.addEventListener(
     "click",
@@ -1000,16 +1350,15 @@ window.addEventListener(
 
             confirmationModal.style.display =
                 "none";
-
         }
 
     }
 );
 
 
-/* =========================================================
-                    FINAL INITIALISATION
-========================================================= */
+// =========================================================
+// FINAL INITIALISATION
+// =========================================================
 
 window.addEventListener(
     "load",
@@ -1019,35 +1368,36 @@ window.addEventListener(
 
             loadingOverlay.style.display =
                 "flex";
-
         }
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            if (loadingOverlay) {
+                if (loadingOverlay) {
 
-                loadingOverlay.style.display =
-                    "none";
+                    loadingOverlay.style.display =
+                        "none";
+                }
 
-            }
-
-        }, 1000);
+            },
+            1000
+        );
 
     }
 );
 
 
-/* =========================================================
-                    START APPLICATION
-========================================================= */
+// =========================================================
+// START APPLICATION
+// =========================================================
 
 loadEmployees();
 
 
-/* =========================================================
-                    SUCCESS MESSAGE
-========================================================= */
+// =========================================================
+// SUCCESS MESSAGE
+// =========================================================
 
 console.log(
     "ModernTech Performance Dashboard Loaded Successfully."
