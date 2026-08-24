@@ -8,7 +8,7 @@ const employeeRoutes = require("./routes/employeeRoutes");
 const performanceRoutes = require("./routes/performanceRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2020;
 
 // Middleware
 app.use(cors());
